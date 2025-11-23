@@ -34,8 +34,8 @@ def crear_cirugia(cirugia: schemas_cirugia.CirugiaBase, db: Session = Depends(ge
         # Esta lógica es simplificada, en producción se requiere comparar rangos completos
     ).first()
 
-    # Si quieres ser estricto, descomenta esto:
-    # if choque:
+    
+
     #     raise HTTPException(status_code=400, detail="⚠️ El pabellón está ocupado en ese horario.")
 
     db_cirugia = models.Cirugia(**cirugia.model_dump())
@@ -55,7 +55,7 @@ def leer_cirugia(cirugia_id: int, db: Session = Depends(get_db)):
     return db_cirugia
 
 # -------------------------------------------------------
-# 3. MODIFICAR CIRUGÍA (RQ04) - ¡NUEVO!
+# 3. MODIFICAR CIRUGÍA (RQ04)
 # -------------------------------------------------------
 @router.put("/{cirugia_id}", response_model=schemas_cirugia.Cirugia)
 def modificar_cirugia(cirugia_id: int, datos_nuevos: schemas_cirugia.CirugiaBase, db: Session = Depends(get_db)):
@@ -75,7 +75,7 @@ def modificar_cirugia(cirugia_id: int, datos_nuevos: schemas_cirugia.CirugiaBase
     return db_cirugia
 
 # -------------------------------------------------------
-# 4. REPORTAR EVENTO / CAMBIAR ESTADO (RQ07) - ¡NUEVO!
+# 4. REPORTAR EVENTO / CAMBIAR ESTADO (RQ07)
 # -------------------------------------------------------
 @router.patch("/{cirugia_id}/estado")
 def cambiar_estado_cirugia(cirugia_id: int, nuevo_estado: str, db: Session = Depends(get_db)):
