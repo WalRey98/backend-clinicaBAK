@@ -2,27 +2,26 @@
 from app.db.database import SessionLocal, engine
 from app.db import models
 # IMPORTANTE: Importamos la función para encriptar la clave
-# Asegúrate de que app/core/security.py exista y tenga la función get_password_hash
 from app.core.security import get_password_hash 
 
-# Asegurarse de que las tablas existan (incluida la nueva de Usuarios)
+# Asegurarse de que las tablas existan
 models.Base.metadata.create_all(bind=engine)
 
 def init_db():
     db = SessionLocal()
-    print("🌱 Iniciando creación de datos iniciales...")
+    print("🌱 Creando datos iniciales...")
 
     # -------------------------------------------------------
-    # 1. CREAR USUARIO ADMIN
+    # 1. ESTA ES LA PARTE QUE TE FALTABA (Crear Admin)
     # -------------------------------------------------------
-    # Verificamos si ya existe el admin para no duplicarlo
+    # Verificamos si ya existe el usuario 'admin'
     if not db.query(models.Usuario).filter(models.Usuario.username == "admin").first():
         print("👤 Creando usuario administrador 'admin'...")
         admin_user = models.Usuario(
             username="admin",
-            # Encriptamos la contraseña "1234" antes de guardarla
+            # Encriptamos la contraseña "1234"
             hashed_password=get_password_hash("1234"), 
-            nombre_completo="Administrador del Sistema",
+            nombre_completo="Administrador Sistema",
             rol="Admin"
         )
         db.add(admin_user)
@@ -33,14 +32,14 @@ def init_db():
     # 2. CREAR PABELLONES
     # -------------------------------------------------------
     if not db.query(models.Pabellon).first():
-        print("🏥 Creando pabellones de la Clínica BAK...")
+        print("🏥 Creando pabellones...")
         lista_pabellones = []
 
         # Salas Complejas (2)
         lista_pabellones.append(models.Pabellon(nombre="Pabellón Central 1 (Complejo)", es_compleja=True))
         lista_pabellones.append(models.Pabellon(nombre="Pabellón Central 2 (Complejo)", es_compleja=True))
 
-        # Salas Grandes Normales (14 restantes de las 16)
+        # Salas Grandes Normales (14)
         for i in range(1, 15):
             lista_pabellones.append(models.Pabellon(nombre=f"Pabellón General {i}", es_compleja=False))
 
@@ -56,14 +55,14 @@ def init_db():
         lista_pabellones.append(models.Pabellon(nombre="Sala Hemodinámica", es_compleja=True))
 
         db.add_all(lista_pabellones)
-        print(f"✅ Se han agregado {len(lista_pabellones)} pabellones a la lista de creación.")
+        print(f"✅ Se han creado {len(lista_pabellones)} pabellones.")
     else:
-        print("⚠️ Los pabellones ya existen en la base de datos.")
+        print("⚠️ Los pabellones ya existen.")
 
-    # 3. Guardar todo en la base de datos
+    # 3. Guardar todo (Usuarios y Pabellones)
     db.commit()
     db.close()
-    print("🚀 ¡Base de datos poblada exitosamente! Ya puedes iniciar sesión.")
+    print("🚀 ¡Base de datos lista! Usuario admin creado.")
 
 if __name__ == "__main__":
     init_db()
