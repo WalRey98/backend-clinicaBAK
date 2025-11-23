@@ -43,13 +43,13 @@ class Pabellon(Base):
 class Cirugia(Base):
     __tablename__ = "cirugias"
 
-    # CORREGIDO: primery_key -> primary_key
+    
     id = Column(Integer, primary_key=True, index=True)
     nombre_paciente = Column(String, index=True)
     cirujano = Column(String)
-    # OMISIÓN CORREGIDA: Agregado el anestesista y la enfermera (asumo que se había omitido)
+    #Agregado el anestesista y la enfermera
     anestesista = Column(String)
-    # CORREGIDO: personal_apóyo -> personal_apoyo y Colum -> Column
+    #personal_apóyo -> personal_apoyo y Colum -> Column
     personal_apoyo = Column(String)
 
     fecha_inicio_planeada = Column(DateTime, default=datetime.datetime.utcnow)
