@@ -1,0 +1,23 @@
+Archivos de Python compilados
+
+pycache/
+*.py[cod]
+
+Entornos virtuales (pesan mucho)
+
+venv/
+env/
+
+Variables de entorno (SECRETOS)
+
+.env
+
+Base de datos local (si quedara alguna)
+
+*.db
+*.sqlite3
+
+Carpetas de IDEs
+
+.vscode/
+.idea/
