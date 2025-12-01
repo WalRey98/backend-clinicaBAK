@@ -1,0 +1,49 @@
+Archivos de Python compilados
+
+pycache/
+*.py[cod]
+
+Entornos virtuales (pesan mucho)
+
+venv/
+env/
+
+Variables de entorno (SECRETOS)
+
+.env
+
+Base de datos local (si quedara alguna)
+
+*.db
+*.sqlite3
+
+Carpetas de IDEs
+
+.vscode/
+.idea/
+
+
+# === PYTHON BACKEND ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+.env
+venv/
+env/
+
+# === FASTAPI UPLOADS ===
+uploads/
+media/
+
+# === NODE / ANGULAR FRONTEND ===
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.angular/cache/
+frontend/.vscode/
+
+# === GENERAL ===
+.DS_Store
+*.log

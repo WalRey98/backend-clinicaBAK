@@ -1,0 +1,358 @@
+<div class="bg-black text-white py-8">
+  <div class="text-center">
+    Copyright © {{ currYear }}. {{'EVIEW una empresa de Ewest SpA' | translate }}, {{'Todos los derechos reservados' |
+    translate}}.
+    <div class="flex justify-center gap-4 mt-4">
+      <!-- Términos de Servicio -->
+      <a routerLink="/terms-of-service"
+        class="cursor-pointer text-gray-400 hover:text-white transition-colors duration-200">
+        {{ 'Términos de Servicio' | translate }}
+      </a>
+
+      <span class="text-gray-400 px-2">-</span>
+
+      <!-- Política de Privacidad -->
+      <a routerLink="/privacy-policy"
+        class="cursor-pointer text-gray-400 hover:text-white transition-colors duration-200">
+        {{ 'Política de Privacidad' | translate }}
+      </a>
+
+      <span class="text-gray-400 px-2">-</span>
+
+      <!-- Contacto -->
+      <a class="cursor-pointer text-gray-400 hover:text-white" (click)="scrollToSection('contact')">
+        {{'Contacto' | translate}}
+      </a>
+    </div>
+  </div>
+
+  <!-- Modal Términos de Servicio -->
+  <div *ngIf="showTermsModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white h-full w-full max-w-3xl mx-auto p-8 rounded-lg relative overflow-hidden flex flex-col">
+      <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" (click)="closeModal('terms')">
+        ✕
+      </button>
+
+      <h2 class="text-2xl font-bold mb-4 text-gray-600">
+        {{ 'Términos de Servicio' | translate }}
+      </h2>
+
+      <div class="overflow-y-auto pr-2" style="max-height: calc(100vh - 120px);">
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'PRIMERO GENERALIDADES\n\nEl presente documento, regula los términos y condiciones generales aplicables al
+          acceso y uso que el Usuario realizará del Sitio Web www.waitart.com (en adelante waitart.com o el Sitio Web
+          indistintamente), así como a cualquier tipo de información, contenido, imagen, video, audio u otro material
+          comunicado o presente en el Sitio Web.\n\nPara efectos del presente documento se entenderá como Sitio Web la
+          apariencia externa de los interfaces de pantalla, tanto de forma estática como de forma dinámica, es decir, el
+          árbol de la navegación; y todos los elementos integrados tanto en los interfaces de pantalla como en el árbol
+          de navegación (en adelante, Contenidos) y todos aquellos servicios o recuerdos en línea que en su caso ofrezca
+          a los usuarios (en adelante, Servicios).\n\nEwest Chile SpA se reserva la facultad de modificar, en cualquier
+          momento, y sin previo aviso, la presentación y configuración del Sitio Web y de los Contenidos y Servicios que
+          en él pudieran estar incorporados, así como también estos Términos y Condiciones. El Usuario reconoce y acepta
+          que en cualquier momento Ewest Chile SpA pueda interrumpir, desactivar y/o cancelar cualquiera de estos
+          elementos que se integran en el Sitio Web o el acceso a los mismos.\n\nEl acceso y uso del sitio web y del
+          contenido relacionado o anexo, descrito en el presente documento, se regirá íntegramente por las leyes de la
+          República de Chile. Por consiguiente, las visitas, así como también los posibles contratos o transacciones que
+          el usuario realice en la plataforma que representa el sitio web, así como los efectos jurídicos que éstas
+          pudieran tener, quedan sometidos a las leyes y a la jurisdicción de los tribunales de justicia de la República
+          de Chile. De particular importancia resultan la aplicación de la Ley N° 19.628 de Protección de Datos
+          Personales y la Ley N° 19.496 sobre Derechos del Consumidor.\n\nAdicionalmente, este sitio web y sus
+          contenidos, así como también las transacciones que se pudieran llevar a cabo en él, están destinados a todo
+          tipo de usuarios, sin importar su nacionalidad y lugar de residencia, no bien existe primacía respecto a la
+          aplicación de la legislación chilena para los casos puntuales.\n\nSe recomienda al usuario leer detenidamente
+          el contenido de estos Términos y Condiciones Generales de Uso, así como imprimir y conservar una copia de
+          éstas en una unidad de disco local de almacenamiento, o de almacenamiento portátil, para su conveniencia y
+          seguridad.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'SEGUNDO INFORMACIÓN DEL SITIO WEB\n\nLa titularidad de waitart.com corresponde a Ewest Chile SpA, RUT
+          77.662.015-7.\n\nAdicionalmente, para efectos de cualquier tipo de comunicación, presentación, consulta o
+          reclamos relacionados con el uso o funcionamiento del Sitio Web, o con los contratos y transacciones que se
+          hubieran llevado a cabo, waitart.com recibirá todo tipo de comunicaciones al correo electrónico
+          contacto@waitart.com el cual sólo estará disponible para efectos de funciones de Servicio al Cliente. Ewest
+          Chile SpA, se encuentra domiciliado para estos efectos en Agustinas 1442 OF 402, Santiago - Chile.\n\nEl Sitio
+          Web también cuenta con un servicio de atención al cliente, ante el cual se pueden hacer valer distintas
+          presentaciones o reclamos relacionados con el uso o acceso a la página, así como también con los negocios y
+          transacciones realizados en el sitio web, el cual puede ser contactado a la dirección de correo electrónico
+          contacto@waitart.com, o al número telefónico o whatsapp +56 9 5823 2080.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'TERCERO USUARIO\n\nEl acceso a este Sitio Web, la navegación y uso del mismo, así como cualquier espacio
+          habilitado para interacciones entre Usuarios, o entre éste y el Sitio Web (secciones de comentarios, espacios
+          de blogging y micro blogging, y extensiones destinadas a esta función), conferirán a las personas la condición
+          de Usuario. Por lo tanto, se entienden aceptar los Términos y Condiciones Presentes en este documento desde el
+          momento de acceder al Sitio Web o a sus contenidos, así como también todo tipo de futuras modificaciones que
+          se hicieran a los Términos y Condiciones, sin perjuicio de lo que pudiera establecer futura legislación
+          dictada en la República de Chile destinada a regular esta clase de documentos, o que fuera aplicable al uso de
+          Sitios Web.\n\nAdicionalmente, y más allá del costo de la conexión a internet que pague el Usuario en los
+          casos en que corresponda, el acceso a los contenidos y servicios del Sitio Web, total o parcialmente, y sea
+          que estos provengan de waitart.com o de terceros, están sujetos a una contratación previa, la cual requerirá
+          el pago por parte del Usuario como contraprestación, para poder acceder a estos contenidos y servicios.' |
+          translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'REGISTRO DEL USUARIO\n\nSerá requisito necesario para el uso del Sitio Web, así como para realizar
+          transacciones, adquirir productos y contratar servicios ofrecidos por esta vía, la aceptación de los presentes
+          Términos y Condiciones al momento del registro por parte del Usuario. Adicionalmente, el Usuario deberá
+          designar una clave o contraseña de acceso.\n\nSe entenderán conocidos y aceptados estos Términos y Condiciones
+          por el sólo hecho de registrarse el Usuario, acto en el cual se incluirá una manifestación expresa del Usuario
+          sobre el conocimiento de las presentes condiciones de uso.\n\nEl registro de cada Usuario se verificará
+          completando y suscribiendo el formulario que para estos efectos se proporcionará por parte del Sitio Web, así
+          como su posterior envío, el cual se concretará por medio de hacer click el Usuario en el elemento respectivo
+          dentro del Sitio Web.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'CLAVE SECRETA\n\nUna vez registrado, el Usuario tendrá a su disposición un nombre de usuario y una
+          contraseña o clave secreta, por medio de los cuales no sólo podrá ingresar al Sitio Web y tener acceso a sus
+          contenidos, sino también un acceso personalizado, confidencial y seguro. El Usuario tendrá la posibilidad de
+          cambiar su contraseña o clave secreta, para lo cual existirá un procedimiento regulado dentro del Sitio Web y
+          su estructura.\n\nEl Usuario asume totalmente su responsabilidad por el mantenimiento de la confidencialidad
+          de su contraseña o clave secreta registrada en el Sitio Web. Dicha contraseña o clave es de uso personal, por
+          lo que su entrega voluntaria a terceros por parte del Usuario, no acarrea ningún tipo de responsabilidad por
+          parte de waitart.com, ni de sus afiliados y representantes, en caso de uso malicioso.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'RESPONSABILIDAD DE LOS USUARIOS\n\nwaitart.com entrega al Usuario un servicio caracterizado por la
+          diversidad del contenido proporcionado. El Usuario asume su responsabilidad al ingresar al Sitio Web, para
+          realizar un correcto uso del mismo y sus contenidos. Así, esta responsabilidad se extenderá, de forma no
+          taxativa, a\n\n1.- Usar la información, Contenidos y/o Servicios y datos ofrecidos por waitart.com, sin que
+          sea contrario a estos Términos y Condiciones, así como al Ordenamiento Jurídico Chileno y a la Moral y el
+          Orden Público, o que de cualquier otra forma pudieran acarrear la vulneración de derechos de terceros, o el
+          funcionamiento y operaciones normales del Sitio Web.\n\n2.- La veracidad y licitud de los datos e información
+          aportados por el Usuario en los formularios de registro presentes en el Sitio Web. En todo caso, el Usuario
+          notificará de forma inmediata a waitart.com acerca de cualquier hecho relacionado con el uso indebido de
+          información registrada en dichos formularios, tales como, pero no sólo, robo, extravío, o el acceso no
+          autorizado a identificadores y/o contraseñas, con el fin de proceder a su inmediata cancelación.\n\nEwest
+          Chile SpA se reserva el derecho de revisar y retirar todos aquellos comentarios y/o contenido tales como,
+          fotos, videos e interacciones emanados de Usuarios y creadoras o creadores que vulneren la ley, el respeto a
+          la dignidad a la persona, que sean discriminatorios en base a raza, nacionalidad, sexo, orientación sexual,
+          estirpe o condición, así como aquellos que constituyan mensajes conocidos como spam, o que atenten contra la
+          juventud o infancia, el orden, o la seguridad pública, ya sea antes o después de ser publicados a fin de
+          verificar la edad de los participantes, asegurando así que no se estén incumpliendo estos términos y
+          condiciones y ninguna normativa legal vigente, dejando a juicio de waitart.com, el determinar si el contenido
+          es apropiado o no para el Sitio Web.\n\nDe todas maneras, Ewest Chile SpA no se hace responsable de las
+          opiniones, de cualquier tipo, emitidas por los Usuarios mediante comentarios u herramientas o extensiones de
+          blogging o microblogging.\n\nEl simple acceso a www.waitart.com no supone una relación comercial entre
+          waitart.com y el Usuario.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'CAPACIDAD LEGAL\n\nEl Usuario declara ser mayor de edad y, por lo tanto, tener la capacidad legal necesaria
+          y suficiente para vincularse por los presentes Términos y Condiciones. Por lo tanto, waitart.com no se dirige
+          a menores de edad, declinando cualquier responsabilidad por el incumplimiento de este requisito.\n\n Aun así,
+          las reglas legales de capacidad establecidas en el ordenamiento jurídico regirán en todos aquellos casos donde
+          su aplicación sea pertinente. Por tanto, si una persona no tiene capacidad legal para contratar, debe
+          abstenerse de utilizar los Contenidos y Servicios que requieran de esta capacidad. waitart.com podrá, en
+          cualquier momento, en forma temporal o definitiva, suspender la participación de usuarios sobre los cuales se
+          compruebe que carecen de capacidad legal para usar de los Servicios y Contenido que la requieran, o que
+          proporcionen información falsa, inexacta o fraudulenta al Sitio Web.\n\nEl Sitio Web www.waitart.com está
+          dirigido principalmente a Usuarios residentes en la República de Chile. waitart.com no asegura que el Sitio
+          Web cumpla, parcial o totalmente, con legislaciones de otros países. Si el Usuario reside o está domiciliado
+          en un país extranjero, y decide acceder y/o navegar en este Sitio Web, lo hará bajo su propia responsabilidad,
+          asegurándose de que tal acceso y navegación cumpla con lo dispuesto en la legislación local que le sea
+          aplicable, no asumiendo Ewest Chile SpA responsabilidad alguna que pueda derivar de dicho acceso.' |
+          translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'CUARTO DERECHOS Y GARANTÍAS DEL USUARIO DEL SITIO\n\nEl Usuario gozará de todos los derechos que le
+          reconoce la legislación sobre protección al consumidor vigente en Chile, adicionalmente a los derechos que le
+          otorgan estos Términos y Condiciones. Además, el Usuario dispondrá en todo momento de los derechos de
+          información, rectificación y cancelación de los datos personales conforme a la Ley N° 19.628 sobre protección
+          de datos personales.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'QUINTO MEDIOS DE PAGO\n\nLos servicios que se informan y transan en este sitio sólo podrán ser pagados por
+          medio de\n\n1.- Tarjeta de crédito bancarias Visa, Mastercard, Dinners Club International, American Express u
+          otras habilitadas y válidamente emitidas en Chile o en el extranjero.\n\n2.- Tarjetas de débito bancarias
+          acogidas al sistema Redcompra o habilitadas para realizar pagos y transacciones a través del sistema WebPay,
+          válidamente emitidas en Chile por bancos nacionales.\n\nOtros medios de pago que pudieran ser anunciados y
+          aceptados a futuro, los cuales serán informados pertinentemente por los canales y conductos que
+          correspondan.\n\nEl pago con tarjetas de débito se realizará a través de WebPay, que es un sistema de pago
+          electrónico que se encarga de hacer el cargo automático a la cuenta bancaria del usuario.\n\nEl Usuario
+          declara que entiende que estos medios o portales de pago son de propiedad de terceras empresas o personas
+          proveedoras de dichos servicios, independientes y no vinculadas a Ewest Chile SpA, por lo que la continuidad
+          de su prestación de servicios en el tiempo, así como el correcto funcionamiento de sus herramientas y botones
+          de pago en línea, son de exclusiva responsabilidad de las proveedoras de estos servicios y en ningún caso de
+          waitart.com.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'SEXTO RESPONSABILIDAD\n\nEwest Chile SpA no responderá, en ningún caso, por los siguientes hechos\n\n1.-
+          Uso indebido que Usuarios o visitantes al Sitio Web realicen del contenido almacenado, así como de los
+          derechos de propiedad industrial o intelectual contenidos en el Sitio Web, o servicios.\n\n2.- Daños y
+          perjuicios, concretos o eventuales, causados a Usuarios derivados del funcionamiento de las herramientas de
+          búsqueda del Sitio Web, así como de errores generados por elementos técnicos del Sitio o del motor de
+          búsqueda.\n\n3.- Contenido de Sitios Web a las que los Usuarios puedan acceder con o sin autorización de
+          waitart.com.\n\n4.- Acceso de personas que no cumplan con el límite de edad requerido para el uso del Sitio
+          Web, siguiendo los Términos y Condiciones, así como la legislación vigente referida a la capacidad de
+          ejercicio.\n\n5.- Pérdida, mal uso o uso no autorizado de contraseña o códigos de validación, sea por parte
+          del Usuario o de un tercero, de la forma expresada en estos Términos y Condiciones. De la misma forma, las
+          partes reconocen y dejan constancia que el soporte computacional entregado por www.waitart.com no es
+          infalible, por lo tanto, pueden verificarse circunstancias ajenas a la voluntad de waitart.com que puedan
+          causar que el Sitio Web o su plataforma no se encuentren operativos durante un cierto período de
+          tiempo.\n\n6.- Información referida a waitart.com que se encuentre en Sitios Web distintos o ajenos a
+          www.waitart.com.\n\nEn caso de estar ante alguno de estos supuestos, waitart.com tomará todas las medidas para
+          reestablecer el correcto funcionamiento del Sitio Web y de su sistema comunicacional lo más pronto posible,
+          sin que pudiera imputársele algún tipo de responsabilidad por aquello.\n\nwaitart.com no asegura
+          disponibilidad ni continuidad de funcionamiento del Sitio Web, y tampoco que, en cualquier momento, los
+          Usuarios puedan acceder a él o a las promociones y ofertas que estuvieran disponibles.\n\nEwest Chile SpA
+          tampoco es responsable por la existencia de virus u otros elementos perjudiciales en los documentos o archivos
+          almacenados en los sistemas informáticos de todo tipo de propiedad de los Usuarios. waitart.com no responderá
+          de perjuicios causados al Usuario, derivados del uso indebido de las tecnologías y plataformas puestas a su
+          disposición, cualquiera sea la forma en que se utilicen inadecuadamente estos elementos tecnológicos.
+          Asimismo, Ewest Chile SpA no responderá por daños producidos por el uso indebido o mala fe de los Usuarios al
+          utilizar www.waitart.com.\n\nNo obstante, en el caso de producirse un doble pago por algún Usuario en el Sitio
+          Web, waitart.com realizará la devolución íntegra de la suma del sobrepago, dentro de los 7 días siguientes a
+          la recepción del correspondiente reclamo realizado por el Usuario o sus representantes, el cual debe contar
+          con un anexo que incluya los comprobantes de pago originales correspondientes al sobrepago realizado.\n\nAl
+          momento de registrarse, hacer login, y para comunicarse, www.waitart.com un sistema idóneo, con el fin de
+          encriptar la información. waitart.com no almacena ni conserva datos financieros de sus Usuarios.' |
+          translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'SÉPTIMO PROHIBICIONES\n\nPublicar en la plataforma números de teléfonos o de contacto directo tanto en
+          publicaciones como en textos descriptivos de la biografía, así como la publicación de links de aplicaciones de
+          contacto tipo WhatsApp, Instagram, Facebook, telégram entre otras. La realización de este tipo de
+          publicaciones se expone a recibir las sanciones que waitart.com estime pertinentes llegando inclusive a
+          arriesgar la eliminación de su cuenta sin previo aviso.\n\nIncitar a otras creadoras y creadores a adquirir
+          contenido fuera del sitio web. El uso de links de redes sociales externas es para uso exclusivo referencial o
+          de publicidad, no para iniciar a usuarios a comprar contenido o a realizar cobros o envíos de dinero fuera del
+          sitio web.\n\nLa publicación y/o venta de contenido de terceras personas o con terceras personas sin su
+          consentimiento, sin tener los derechos de este o sin su debida autorización a través de un poder simple y/o en
+          situaciones en las que se pueda distinguir la identidad de la tercera persona o en la situación en la que
+          nuestro equipo de moderación determine que existan dudas con respecto a la edad o identidad de los
+          participantes del contenido. Este tipo de acciones constituye una falta gravísima, arriesgando sanciones como
+          suspensión temporal o permanente de su cuenta waitart.com y sin derecho a reembolso de pagos hechos por
+          suscriptores, compras o donaciones ni retiros de dinero de ventas realizadas antes o después de la publicación
+          de este contenido.\n\nSi un creador o creadora tiene algún suscriptor de pago activo, este no podrá eliminar
+          su cuenta a menos que ya no se encuentre vigente el pago.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'OCTAVO POLÍTICA DE SEGURIDAD DE DATOS\n\nEwest Chile SpA adoptará todas las medidas necesarias para
+          resguardar los datos de sus Usuarios y clave secreta, como sistemas de encriptado de información, certificados
+          de seguridad y otros semejantes o equivalentes que waitart.com considere prudentes para estos efectos. En caso
+          de realizarse cambios hechos por el Usuario en la información registrada o ingresada en el Sitio Web, o bien,
+          si se produce la detección de cualquier tipo de irregularidad atribuible al Usuario relacionada con la
+          información entregada por el Usuario, así como con todo lo relacionado a la identificación en las mismas o el
+          uso de medios de pago o simplemente como medida de protección de identidad, el personal del Sitio Web se
+          pondrá en contacto con el Usuario, sea por vía telefónica o por correo electrónico, para corroborar los datos
+          y la información, así como para evitar la existencia de posibles fraudes.\n\nEn la eventualidad de no
+          establecerse contacto en un plazo de 48 horas, y pensando en la seguridad del Usuario, cualquier compra de un
+          producto o contratación de un servicio no será confirmada. Se informará al Usuario por vía telefónica o por
+          correo electrónico el hecho de haber quedado sin efectos producto de no haber podido comprobarse su identidad
+          o medio de pago utilizado. Adicionalmente, los comprobantes en que consten las gestiones realizadas para
+          intentar contactarse con el Usuario con el objetivo de confirmar la transacción, quedarán a disposición de
+          este último por un plazo de 15 días, en caso que el Usuario quisiera confirmar la compra o contratación.
+          Consultas adicionales pueden realizarse por las vías de contacto con el Sitio Web establecidas en el párrafo
+          relativo a la Información del Sitio Web, presente en este mismo documento de Términos y Condiciones.\n\nCon
+          todo lo anterior, los Usuarios son plenamente responsables por el extravío o pérdida, mal uso o uso no
+          autorizado que se diera del servicio adquirido, sea que incurran ellos o terceros en los hechos descritos
+          previamente, luego de realizada una compra o contratación de servicio siguiendo la forma estipulada en los
+          presentes Términos y Condiciones.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'DATOS PERSONALES\n\nAl acceder al Sitio Web www.waitart.com, los Usuarios o visitantes garantizan que la
+          información que proporcionan para ingresar o para la compra de productos o contratación de servicios es veraz,
+          completa, exacta y actualizada.\n\nDe acuerdo a lo establecido en la Ley N° 19.628 de Protección de Datos
+          Personales, los datos de este tipo que se suministren al Sitio Web, pasan a formar parte de una base de datos
+          perteneciente a Ewest Chile SpA y serán destinados única y exclusivamente para los fines que motivaron su
+          entrega, especialmente para la comunicación entre waitart.com y sus Usuarios, validar datos relativos a
+          compras o contratación de servicios, concretar despachos, y responder consultas. Estos datos nunca serán
+          comunicados o compartidos con otras empresas sin expresa autorización de su titular (el Usuario) ni serán
+          transferidos internacionalmente.\n\nwaitart.com jamás solicitará a sus Usuarios la entrega de datos personales
+          o financieros a través de correos electrónicos.\n\nwaitart.com presume que los datos incorporados por los
+          Usuarios o por personas autorizadas por éstos son correctos y exactos. Los Usuarios, al aceptar los presentes
+          Términos y Condiciones, manifiestan su conformidad con que los datos personales aportados al rellenar
+          formularios presentes en www.waitart.com puedan ser utilizados posteriormente para la elaboración y envío de
+          ofertas que puedan diferir de las ofrecidas en el Sitio Web.\n\nSin perjuicio de lo anterior, Ewest Chile SpA
+          garantiza a todos sus Usuarios el libre ejercicio de los derechos contemplados en la Ley N° 19.628 de
+          Protección de Datos Personales en lo relativo a la información, modificación, cancelación y bloqueo de sus
+          datos personales. En consecuencia, los Usuarios podrán realizar requerimientos relacionados con los ya
+          mencionados derechos, los que serán respondidos por waitart.com en un plazo no superior a dos días corridos.'
+          | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'NOVENO COMUNICACIONES\n\nEwest Chile SpA se obliga a, en caso de enviar cualquier tipo de comunicación e
+          información, incluyendo publicidad o promociones, a cualquier medio de contacto proporcionado por el Usuario,
+          incluyendo números telefónicos o correo electrónico, dicha comunicación contendrá al menos la siguiente
+          información\n\n1.- Identificación del tipo de mensaje, dejando en claro al Usuario el tipo de información que
+          se trata, especialmente si es un mensaje que contiene publicidad o promociones, todo lo cual figurará en el
+          campo de asunto del mensaje (e-mail), o bien se informará en primer lugar (comunicación telefónica por voz o
+          texto).\n\n2.- Existencia del derecho del consumidor, reconocido por la normativa chilena, relacionado con la
+          facultad que tiene el Usuario para solicitar el cese de este tipo de mensajes por parte de waitart.com. Al
+          mismo tiempo, se reconoce la obligación por parte de waitart.com de suspender los envíos de información en
+          caso de recibir la solicitud por parte del Usuario.\n\n3.- La garantía de un proceso expedito, sencillo y
+          efectivo para el caso que el Usuario quiera hacer la solicitud, para la cual waitart.com puede requerir algún
+          tipo de información previo a llevarlo a cabo.\n\n4.- En caso que se trate de publicidad o promociones
+          provenientes de sitios externos, o de empresas, compañías o marcas asociadas con waitart.com, el mensaje
+          contendrá la información necesaria para identificar al anunciante, incluyendo su denominación comercial si la
+          tuviera.\n\nLas promociones que se ofrezcan por medio de este Sitio Web no son necesariamente las mismas que
+          ofrezcan otros canales de servicios utilizados por las empresas, tales como locales físicos, anuncios por TV o
+          radio, catálogos u otros, a menos que se señale expresamente en este sitio o en la publicidad que realicen las
+          empresas de cada promoción.' | translate}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Política de Privacidad -->
+  <div *ngIf="showPrivacyModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white h-full w-full max-w-3xl mx-auto p-8 rounded-lg relative overflow-hidden flex flex-col">
+      <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" (click)="closeModal('privacy')">
+        ✕
+      </button>
+      <h2 class="text-2xl font-bold mb-4 text-gray-600">
+        {{'Política de Privacidad' | translate}}
+      </h2>
+      <div class="overflow-y-auto pr-2" style="max-height: calc(100vh - 120px);">
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'En waitart.com, operado por Ewest Chile SpA, respetamos y protegemos la privacidad de nuestros usuarios.
+          Esta Política de Privacidad explica cómo recopilamos, utilizamos, almacenamos y protegemos los datos
+          personales que nos proporcionas al acceder o utilizar nuestro sitio web www.waitart.com.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'1.- RESPONSABLE DEL TRATAMIENTO\n\nEwest Chile SpA, RUT 77.662.015-7, domiciliado en Agustinas 1442 OF 402,
+          Santiago - Chile, es el responsable del tratamiento de tus datos personales conforme a la Ley N° 19.628 sobre
+          Protección de la Vida Privada.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'2.- DATOS PERSONALES RECOPILADOS\n\nPodemos recopilar y almacenar los siguientes datos cuando interactúas
+          con el sitio\n\nNombre completo y correo electrónico.\n\nInformación de contacto y dirección IP.\n\nDatos de
+          pago (procesados por terceros, no almacenados en nuestros servidores).\n\nInformación entregada en formularios
+          de registro, compra o consulta.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'3.- FINALIDAD DEL TRATAMIENTO\n\nLos datos serán utilizados exclusivamente para los siguientes
+          fines\n\nValidación de identidad y autenticación del usuario.\n\nGestión de compras, contrataciones y
+          despachos. \n\nComunicación directa con el usuario (información relevante, atención al cliente,
+          promociones).\n\nPrevención de fraudes y verificación de identidad.\n\nElaboración de ofertas y promociones
+          que puedan diferir de las vistas en el sitio web.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'4.- SEGURIDAD DE LOS DATOS\n\nEwest Chile SpA adopta medidas técnicas y organizativas para proteger tus
+          datos, incluyendo\n\nCertificados de seguridad SSL.\n\n Encriptación de contraseñas.\n\nProcesos de
+          verificación ante irregularidades detectadas en registros o pagos.\n\nSi no es posible verificar tu identidad
+          o información de pago en un plazo de 48 horas, la compra o transacción podrá quedar anulada por razones de
+          seguridad.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'5.- COMPARTICIÓN DE DATOS\n\nwaitart.com no comparte ni comunica tus datos personales a terceros sin tu
+          consentimiento expreso. Tampoco realizamos transferencias internacionales de datos.\n\nTampoco te
+          solicitaremos información confidencial vía correo electrónico.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'6.- DERECHOS DEL USUARIO\n\nTienes derecho a\n\nAcceder a tus datos personales.\n\nSolicitar su
+          modificación, cancelación o bloqueo.\n\nOponerte al tratamiento de los mismos conforme a la Ley N°
+          19.628.\n\nPuedes ejercer estos derechos enviando tu solicitud al correo contacto@waitart.com, la cual será
+          respondida en un plazo no superior a dos días corridos.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'7.- ACTUALIZACIONES DE ESTA POLÍTICA\n\nNos reservamos el derecho a actualizar esta política en cualquier
+          momento. Te notificaremos los cambios importantes mediante correo electrónico o una notificación destacada en
+          el sitio.' | translate}}
+        </p><br>
+        <p class="text-gray-600 whitespace-pre-line">
+          {{'8.- CONTACTO\n\nPara consultas sobre esta política o para ejercer tus derechos, contáctanos
+          a\n\ncontacto@waitart.com\n\n+56 9 5823 2080' | translate}}
+        </p>
+      </div>
+    </div>
+  </div>

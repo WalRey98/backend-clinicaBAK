@@ -1,0 +1,80 @@
+<section id="home" class="relative min-h-screen flex items-center justify-center text-white" style="background-image: url('/assets/images/fondo-login.svg');">
+    <!-- Imagen de fondo con opacidad -->
+    <div class="absolute inset-0 z-0">
+    </div>
+  
+    <!-- Contenedor del formulario -->
+    <div class="relative z-10 w-full max-w-md p-8 rounded-xl bg-white/10 backdrop-blur-md">
+      <!-- Tu logo -->
+      <div class="text-center mb-6">
+        <a routerLink="/" class="flex items-center justify-center">
+          <!-- <img class="w-8" src="/assets/images/logo.svg" alt="Logo" /> -->
+          <span
+          class=" align-middle text-2xl text-white font-bold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline">
+          CLINICA BAK
+        </span>
+        </a>
+      </div>
+      <h2 *ngIf="isLogin" class="text-xl font-semibold text-center mb-2">¡Inicia sesión!</h2>
+      <h2 *ngIf="!isLogin" class="text-xl font-semibold text-center mb-2">¡Regístrate y comienza a administrar tu
+        clinica!</h2>
+  
+      <!-- Login Form -->
+      <form *ngIf="isLogin" class="space-y-5 dark:text-white" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div>
+          <label for="username">{{'Nombre de Usuario' | translate}}</label>
+          <div class="relative text-white-dark">
+            <input id="username" type="email" formControlName="username"
+              placeholder="{{'Introduce tu Usuario' | translate}}"
+              class="form-input ps-10 placeholder:text-white-dark w-full" />
+            <span class="absolute start-4 top-1/2 -translate-y-1/2">
+              <i class="fas fa-user"></i>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="Password">{{'Contraseña' | translate}}</label>
+          <div class="relative text-white-dark">
+            <input [type]="showPassword ? 'text' : 'password'" id="Password" formControlName="password"
+              placeholder="{{'Introduce tu contraseña' | translate}}"
+              class="form-input ps-10 placeholder:text-white-dark w-full" />
+            <span class="absolute start-4 top-1/2 -translate-y-1/2">
+              <i class="fas fa-lock"></i>
+            </span>
+            <span class="absolute end-4 top-1/2 -translate-y-1/2 cursor-pointer" (click)="togglePasswordVisibility()">
+              <fa-icon *ngIf="!showPassword" [icon]="faEye"></fa-icon>
+              <fa-icon *ngIf="showPassword" [icon]="faEyeSlash"></fa-icon>
+            </span>
+          </div>
+          <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-900">
+            <div *ngIf="f['password'].errors?.['required']">{{'La contraseña es obligatoria' | translate}}.</div>
+            <div *ngIf="f['password'].errors?.['minlength']">{{'La contraseña debe tener al menos 8 caracteres' |
+              translate}}.</div>
+            <div *ngIf="f['password'].errors?.['maxlength']">{{'La contraseña no puede tener más de 12 caracteres' |
+              translate}}.</div>
+          </div>
+        </div>
+        <!-- <div class="flex justify-end items-center">
+          <a routerLink="/password-reset" class="text-sm underline">{{'¿Olvidaste tu contraseña?' |
+            translate}}</a>
+        </div> -->
+        <div *ngIf="errorSession">{{'Ocurrió un error con tu email o password' | translate}}</div>
+        <button type="submit"
+          class="w-full  bg-purple-500  text-white py-2 rounded-md font-semibold transition duration-300  hover:bg-purple-700">
+          {{'INICIAR SESIÓN' | translate}}
+        </button>
+      </form>
+  
+  
+      <!-- <div class="flex justify-between mt-6 space-x-2">
+        <button (click)="showLogin()" class="w-1/1 text-white py-2 rounded"
+          [ngClass]="{ 'bg-blue-700  hover:bg-blue-500': isLogin, 'bg-gray-700  hover:bg-gray-500': !isLogin }">
+          {{'INICIAR SESIÓN' | translate}}
+        </button>
+        <button (click)="showRegister()" class="w-1/2 text-white py-2 rounded"
+          [ngClass]="{ 'bg-blue-700  hover:bg-blue-500 ': !isLogin, 'bg-gray-700 hover:bg-gray-500': isLogin  }">
+          {{'REGISTRARSE' | translate}}
+        </button>
+      </div> -->
+    </div>
+  </section>

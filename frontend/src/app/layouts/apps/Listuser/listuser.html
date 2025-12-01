@@ -1,0 +1,107 @@
+<div>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-xl">Usuarios</h2>
+        <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <div class="flex gap-3">
+                <div>
+                    <button type="button" class="btn btn-primary" (click)="editUser()">
+                        <icon-user-plus class="ltr:mr-2 rtl:ml-2" />
+                        Agregar Usuario
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative">
+                <input
+                    type="text"
+                    placeholder="Buscar Usuarios"
+                    class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
+                    [(ngModel)]="searchUser"
+                    name="searchUser"
+                    (ngModelChange)="searchUsers()"
+                />
+                <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                    <icon-search class="mx-auto" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel mt-5 overflow-hidden border-0 p-0">
+        <ng-container *ngIf="displayType === 'list'">
+            <div class="table-responsive">
+                <table class="table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Nombre</th>
+                            <th>Nombre de usuario</th>
+                            <th>Privilegios</th>
+                            <th>Estado</th>
+                            <th class="!text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let user of filterdUserList">
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.nombre_completo }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.rol }}</td>
+                                <td>{{ user.status }}</td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-4">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="editUser(user)">Editar</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteUser(user)">Eliminar</button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" (click)="resetPassword(user)">Cambiar Contraseña</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Modal para agregar usuario -->
+    <modal #addUserModal class="no-footer">
+        <ng-template #modalHeader>
+            <div class="!font-medium">{{ params.controls['id'].value ? 'Editar Usuario' : 'Agregar Usuario' }}</div>
+        </ng-template>
+        <ng-template #modalBody>
+            <form [formGroup]="params" class="text-sm" (ngSubmit)="saveUser()" ngNativeValidate>
+                <div class="mb-5">
+                    <label for="nombre_completo">Nombre</label>
+                    <input id="nombre_completo" type="text" placeholder="Ingrese Nombre" class="form-input" formControlName="nombre_completo" />
+                </div>
+                <div class="mb-5">
+                    <label for="username">Nombre de Usuario</label>
+                    <input id="username" type="text" placeholder="Ingrese nombre de usuario" class="form-input" formControlName="username" />
+                </div>
+                <div class="mb-5">
+                    <label for="rol">Privilegios</label>
+                    <select id="rol" class="form-input" formControlName="rol">
+                        <option value="" disabled>{{ 'Seleccione una opcion' | translate }}</option>
+                        <option value="Admin">Administrador</option>
+                        <option value="Enfermeria">Enfermera/o</option>
+                        <option value="Doctor">Doctor/a</option>
+                        <option value="Auxiliar">Auxiliar</option>
+                        <option value="Arsenaleria">Arsenaleria</option>
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label for="status">Estado de la cuenta</label>
+                    <select id="status" class="form-input" formControlName="status">
+                        <option value="" disabled>{{ 'Seleccione una opcion' | translate }}</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex items-center justify-end">
+                    <button type="button" class="btn btn-outline-danger" (click)="addUserModal.close()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">{{ params.controls['id'].value ? 'Actualizar' : 'Agregar' }}</button>
+                </div>
+            </form>
+        </ng-template>
+    </modal>
+</div>

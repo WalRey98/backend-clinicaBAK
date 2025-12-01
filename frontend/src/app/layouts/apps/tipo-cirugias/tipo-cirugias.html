@@ -1,0 +1,85 @@
+<div>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-xl">Tipos de Cirugía</h2>
+
+        <div class="flex w-full sm:w-auto items-center gap-3">
+            <button class="btn btn-primary" (click)="editar()">
+                Agregar Tipo de Cirugía
+            </button>
+
+            <div class="relative">
+                <input
+                    type="text"
+                    placeholder="Buscar tipo..."
+                    class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
+                    [(ngModel)]="searchValue"
+                    (ngModelChange)="buscar()"
+                />
+                <span class="absolute top-1/2 -translate-y-1/2 ltr:right-[11px] rtl:left-[11px]">
+                    <icon-search></icon-search>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel mt-5 overflow-hidden p-0">
+        <table class="table-striped table-hover w-full">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Duración Estimada (min)</th>
+                    <th>Descripción</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of tiposFiltrados">
+                    <td>{{ t.nombre }}</td>
+                    <td>{{ t.duracion_estimada }}</td>
+                    <td>{{ t.descripcion }}</td>
+
+                    <td class="flex items-center justify-center gap-4">
+                        <button class="btn btn-sm btn-outline-primary" (click)="editar(t)">Editar</button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminar(t)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <modal #modalTipo class="no-footer">
+        <ng-template #modalHeader>
+            <div class="!font-medium">
+                {{ params.controls['id'].value ? 'Editar Tipo de Cirugía' : 'Agregar Tipo de Cirugía' }}
+            </div>
+        </ng-template>
+
+        <ng-template #modalBody>
+            <form [formGroup]="params" (ngSubmit)="guardar()">
+
+                <div class="mb-4">
+                    <label>Nombre</label>
+                    <input type="text" class="form-input" formControlName="nombre" required />
+                </div>
+
+                <div class="mb-4">
+                    <label>Duración Estimada (minutos)</label>
+                    <input type="number" class="form-input" formControlName="duracion_estimada" required />
+                </div>
+
+                <div class="mb-4">
+                    <label>Descripción</label>
+                    <textarea class="form-input" formControlName="descripcion"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" class="btn btn-outline-danger" (click)="modalTipo.close()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        {{ params.controls['id'].value ? 'Actualizar' : 'Agregar' }}
+                    </button>
+                </div>
+
+            </form>
+        </ng-template>
+    </modal>
+</div>
