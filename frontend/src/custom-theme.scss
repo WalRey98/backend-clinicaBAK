@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Configuración personalizada */
+:root {
+  --color-primary: #4361ee;
+  --color-primary-light: #eaf1ff;
+  --color-primary-dark-light: rgba(67, 97, 238, 0.15);
+
+  --color-secondary: #805dca;
+  --color-secondary-light: #ebe4f7;
+  --color-secondary-dark-light: rgba(128, 93, 202, 0.15);
+
+  --color-success: #00ab55;
+  --color-success-light: #ddf5f0;
+  --color-success-dark-light: rgba(0, 171, 85, 0.15);
+
+  --color-danger: #e7515a;
+  --color-danger-light: #fff5f5;
+  --color-danger-dark-light: rgba(231, 81, 90, 0.15);
+
+  --color-warning: #e2a03f;
+  --color-warning-light: #fff9ed;
+  --color-warning-dark-light: rgba(226, 160, 63, 0.15);
+
+  --color-info: #2196f3;
+  --color-info-light: #e7f7ff;
+  --color-info-dark-light: rgba(33, 150, 243, 0.15);
+
+  --color-dark: #3b3f5c;
+  --color-dark-light: #eaeaec;
+  --color-dark-dark-light: rgba(59, 63, 92, 0.15);
+
+  --color-black: #0e1726;
+  --color-black-light: #e3e4eb;
+  --color-black-dark-light: rgba(14, 23, 38, 0.15);
+
+  --color-white: #ffffff;
+  --color-white-light: #e0e6ed;
+  --color-white-dark: #888ea8;
+
+  --font-family-nunito: 'Nunito', sans-serif;
+}
+
+/* Tipografía */
+body {
+  @apply text-gray-800 font-nunito;
+}
+
+/* Estilo de encabezados */
+h1 {
+  @apply text-4xl font-bold mb-2;
+}
+
+h2 {
+  @apply text-3xl font-bold mb-2;
+}
+
+h3 {
+  @apply text-2xl font-bold mb-2;
+}
+
+h4 {
+  @apply text-xl font-semibold mb-2;
+}
+
+h5 {
+  @apply text-lg font-semibold mb-2;
+}
+
+h6 {
+  @apply text-base font-medium mb-2;
+}
+
+/* Espaciado y contenedores */
+.container {
+  @apply mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Botones personalizados */
+.btn-primary {
+  @apply bg-primary text-white px-4 py-2 rounded-md transition hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white px-4 py-2 rounded-md transition hover:bg-purple-700;
+}
+
+.btn-success {
+  @apply bg-success text-white px-4 py-2 rounded-md transition hover:bg-green-600;
+}
+
+.btn-danger {
+  @apply bg-danger text-white px-4 py-2 rounded-md transition hover:bg-red-600;
+}
+
+.btn-warning {
+  @apply bg-warning text-white px-4 py-2 rounded-md transition hover:bg-yellow-600;
+}
+
+.btn-info {
+  @apply bg-info text-white px-4 py-2 rounded-md transition hover:bg-blue-500;
+}
+
+/* Personalización adicional */
+.alert {
+  @apply p-4 mb-4 rounded text-white;
+}
+
+.alert-primary {
+  @apply bg-primary-light text-primary;
+}
+
+.alert-success {
+  @apply bg-success-light text-success;
+}
+
+.alert-danger {
+  @apply bg-danger-light text-danger;
+}

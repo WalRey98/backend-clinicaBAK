@@ -1,0 +1,58 @@
+<section id="home" class="relative min-h-screen flex items-center justify-center text-white" style="background-image: url('/assets/images/fondo-login.svg'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 z-0 bg-black/40">
+    </div>
+  
+    <div class="relative z-10 w-full max-w-md p-8 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
+      <div class="text-center mb-6">
+        <a routerLink="/" class="flex items-center justify-center flex-col">
+          <span class="align-middle text-3xl text-white font-bold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline drop-shadow-md">
+          CLINICA BAK
+        </span>
+        </a>
+      </div>
+      <h2 *ngIf="isLogin" class="text-xl font-semibold text-center mb-6 text-white drop-shadow-sm">¡Inicia sesión!</h2>
+  
+      <form *ngIf="isLogin" class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div>
+          <label for="username" class="text-white mb-1 block font-medium">{{'Nombre de Usuario' | translate}}</label>
+          <div class="relative text-white-dark">
+            <input id="username" type="text" formControlName="username"
+              placeholder="{{'Introduce tu Usuario' | translate}}"
+              class="form-input ps-10 placeholder:text-gray-300 w-full bg-white/20 border-white/30 text-white focus:border-white focus:ring-white" />
+            <span class="absolute start-4 top-1/2 -translate-y-1/2 text-white">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+               </svg>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="Password" class="text-white mb-1 block font-medium">{{'Contraseña' | translate}}</label>
+          <div class="relative text-white-dark">
+            <input [type]="showPassword ? 'text' : 'password'" id="Password" formControlName="password"
+              placeholder="{{'Introduce tu contraseña' | translate}}"
+              class="form-input ps-10 placeholder:text-gray-300 w-full bg-white/20 border-white/30 text-white focus:border-white focus:ring-white" />
+            <span class="absolute start-4 top-1/2 -translate-y-1/2 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                </svg>
+            </span>
+            <span class="absolute end-4 top-1/2 -translate-y-1/2 cursor-pointer text-white hover:text-gray-200" (click)="togglePasswordVisibility()">
+              <fa-icon *ngIf="!showPassword" [icon]="faEye"></fa-icon>
+              <fa-icon *ngIf="showPassword" [icon]="faEyeSlash"></fa-icon>
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="errorSession" class="p-3 rounded bg-red-500/80 text-white text-center text-sm font-bold border border-red-400">
+            {{'Usuario o contraseña incorrectos' | translate}}
+        </div>
+
+        <button type="submit"
+          class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2.5 rounded-md font-bold text-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] mt-4 border border-white/10">
+          <span *ngIf="!loading">{{'INICIAR SESIÓN' | translate}}</span>
+          <span *ngIf="loading">Cargando...</span>
+        </button>
+      </form>
+    </div>
+</section>

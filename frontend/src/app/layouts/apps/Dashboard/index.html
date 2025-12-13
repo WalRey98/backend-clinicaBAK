@@ -1,0 +1,133 @@
+<div>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+            <h2 class="text-2xl font-bold dark:text-white-light">Panel de Control Quirúrgico</h2>
+            <p class="text-white-dark mt-1">Resumen operativo del {{ fechaHoy | date:'fullDate' }}</p>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" (click)="cargarDatos()">
+            🔄 Actualizar
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+        
+        <div class="panel bg-gradient-to-r from-cyan-500 to-cyan-400 text-white">
+            <div class="flex justify-between">
+                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">Cirugías Hoy</div>
+            </div>
+            <div class="flex items-center mt-5">
+                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.total_hoy }}</div>
+                <div class="badge bg-white/30 text-white shadow-md absolute right-4 mt-2">Programadas</div>
+            </div>
+        </div>
+
+        <div class="panel bg-gradient-to-r from-violet-500 to-violet-400 text-white">
+            <div class="flex justify-between">
+                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">En Pabellón</div>
+            </div>
+            <div class="flex items-center mt-5">
+                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.en_ejecucion }}</div>
+                <div class="text-xs font-medium bg-white/30 px-2 py-1 rounded">Activas ahora</div>
+            </div>
+        </div>
+
+        <div class="panel bg-gradient-to-r from-rose-500 to-rose-400 text-white">
+            <div class="flex justify-between">
+                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">Alertas / Retrasos</div>
+            </div>
+            <div class="flex items-center mt-5">
+                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.retrasos }}</div>
+                <div class="text-white-light text-xs mt-1" *ngIf="kpis.retrasos > 0">⚠️ Atención requerida</div>
+                <div class="text-white-light text-xs mt-1" *ngIf="kpis.retrasos === 0">✅ Todo a tiempo</div>
+            </div>
+        </div>
+
+        <div class="panel bg-gradient-to-r from-blue-500 to-blue-400 text-white">
+            <div class="flex justify-between">
+                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">En Aseo</div>
+            </div>
+            <div class="flex items-center mt-5">
+                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.aseo_activo }}</div>
+                <div class="text-xs font-medium bg-white/30 px-2 py-1 rounded">Pabellones</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        
+        <div class="panel h-full">
+            <div class="flex items-center justify-between mb-5">
+                <h5 class="font-semibold text-lg dark:text-white-light">Próximos Ingresos</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table-hover">
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Paciente</th>
+                            <th>Procedimiento</th>
+                            <th>Pabellón</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="proximasCirugias.length > 0">
+                        <tr *ngFor="let cir of proximasCirugias" class="group hover:bg-gray-50 dark:hover:bg-gray-900">
+                            <td class="whitespace-nowrap font-bold text-primary">{{ cir.hora }}</td>
+                            <td class="font-medium">{{ cir.paciente }}</td>
+                            <td class="text-xs text-gray-500">{{ cir.tipo }}</td>
+                            <td><span class="badge badge-outline-info">{{ cir.pabellon }}</span></td>
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="proximasCirugias.length === 0">
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">
+                                No hay más ingresos programados por hoy.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel h-full">
+            <div class="flex items-center justify-between mb-5">
+                <h5 class="font-semibold text-lg dark:text-white-light">Estado de la Clínica</h5>
+            </div>
+            
+            <div class="space-y-9 mt-4">
+                <div class="flex items-center">
+                    <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 rounded-full bg-primary/10 flex justify-center items-center text-primary">
+                        📊
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between font-semibold mb-2 text-base">
+                            <h6>Eficiencia Quirúrgica</h6>
+                            <span class="text-primary">85%</span>
+                        </div>
+                        <div class="w-full rounded-full h-2.5 bg-dark-light dark:bg-dark-light/10 shadow">
+                            <div class="bg-gradient-to-r from-primary to-primary/60 w-[85%] h-2.5 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 rounded-full bg-success/10 flex justify-center items-center text-success">
+                        🧹
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between font-semibold mb-2 text-base">
+                            <h6>Disponibilidad Aseo</h6>
+                            <span class="text-success">90%</span>
+                        </div>
+                        <div class="w-full rounded-full h-2.5 bg-dark-light dark:bg-dark-light/10 shadow">
+                            <div class="bg-gradient-to-r from-success to-success/60 w-[90%] h-2.5 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-gray-100 rounded text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                <p>💡 <strong>Tip:</strong> Revisa el tablero Scrum para mover cirugías atrasadas y liberar pabellones.</p>
+            </div>
+        </div>
+    </div>
+</div>
