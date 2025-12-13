@@ -1,173 +1,177 @@
 <div>
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-xl font-semibold">Agenda de Pabellones</h2>
+        <div class="flex gap-2">
+            <button type="button" class="btn btn-primary btn-sm" (click)="cargarDatos()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                    <path d="M21 3v5h-5"></path>
+                </svg>
+                Actualizar
+            </button>
+        </div>
     </div>
 
     <div class="-mx-2 overflow-x-auto">
         <div class="flex flex-nowrap gap-5 px-2 pb-2">
 
-            <!-- COLUMNAS: PABELLONES -->
-            <ng-container *ngIf="pabellones?.length">
+            <ng-container *ngIf="pabellones && pabellones.length > 0; else noData">
                 <ng-container *ngFor="let pab of pabellones">
-                    <div class="panel w-80 flex-none p-4">
+                    <div class="panel w-80 flex-none p-4 bg-gray-100 dark:bg-[#1b2e4b] border-t-4 border-primary shadow-md">
 
-                        <div class="flex justify-between items-center mb-2">
+                        <div class="flex justify-between items-center mb-4">
                             <div>
-                                <h4 class="text-lg font-bold">{{ pab.nombre }}</h4>
-                                <div class="text-xs text-gray-500">
-                                    Cirugías: {{ pab.tasks?.length || 0 }} · Min totales: {{ getTotalMinutos(pab) }}
+                                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100">{{ pab.nombre }}</h4>
+                                <div class="text-xs text-gray-500 font-medium">
+                                    <span class="text-primary">{{ getCounts(pab).cirugias }} Cirugías</span>
+                                    <span class="mx-1">·</span>
+                                    <span class="text-purple-500">{{ getCounts(pab).aseos }} Aseos</span>
+                                    <span class="block mt-0.5 text-[10px] text-gray-400">Total: {{ getTotalMinutos(pab) }} min</span>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-sm btn-primary" (click)="editarCirugia(pab.id)">
-                                <icon-plus class="h-4 w-4" />
+                            <button type="button" class="btn btn-sm btn-outline-primary p-1" (click)="abrirModalCrear(pab.id)" title="Agendar aquí">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
                             </button>
                         </div>
 
-                        <!-- LISTA DE CIRUGÍAS (DRAG & DROP) -->
-                        <div [sortablejs]="pab.tasks || []" [sortablejsOptions]="sortableOptionsFor(pab.id)"
-                            class="min-h-[150px]">
+                        <div [sortablejs]="pab.tasks" [sortablejsOptions]="sortableOptionsFor(pab.id)" class="min-h-[150px] space-y-3">
+                            
                             <div *ngFor="let cir of pab.tasks"
-                                class="mb-4 cursor-move p-3 rounded-md shadow relative dark:bg-white-dark/20"
-                                [ngClass]="getCardClasses(cir)" [attr.data-cirugia-id]="cir.id">
-                                <div class="font-semibold text-sm mb-1">
-                                    {{ getTipoNombre(cir.tipo_cirugia_id) }}
+                                 class="p-3 rounded-lg shadow-sm cursor-grab relative hover:shadow-md transition-all"
+                                 [ngClass]="getCardBorder(cir)"
+                                 [attr.data-cirugia-id]="cir.id">
+                                
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="font-bold text-sm text-gray-800 dark:text-white truncate pr-2">
+                                        {{ getTipoNombre(cir.tipo_cirugia_id) }}
+                                    </div>
+                                    <span class="badge whitespace-nowrap" [ngClass]="getEstadoBadge(cir.estado)">
+                                        {{ cir.estado }}
+                                    </span>
                                 </div>
 
-                                <div *ngIf="!cir.es_aseo" class="text-xs text-gray-700 mb-1">
-                                    Paciente: <strong>{{ getPacienteNombre(cir.paciente_id) }}</strong>
+                                <div class="space-y-1">
+                                    <div *ngIf="!cir.es_aseo" class="text-xs text-gray-600 dark:text-gray-400">
+                                        <span class="font-semibold">Px:</span> {{ getPacienteNombre(cir.paciente_id) }}
+                                    </div>
+                                    <div *ngIf="!cir.es_aseo" class="text-xs text-gray-600 dark:text-gray-400">
+                                        <span class="font-semibold">Dr:</span> {{ getDoctorNombre(cir.doctor_id) }}
+                                    </div>
+                                    <div *ngIf="cir.es_aseo" class="text-xs italic text-purple-700 font-semibold text-center py-1 bg-purple-100 rounded">
+                                        🧹 BLOQUE DE LIMPIEZA
+                                    </div>
+
+                                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 text-xs">
+                                        <div class="flex items-center font-mono text-gray-600 dark:text-gray-300">
+                                            <svg width="14" height="14" class="mr-1 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            {{ cir.hora_inicio }} - {{ cir.hora_fin_estimada | date:'HH:mm' }}
+                                        </div>
+                                        <div *ngIf="cir.extra_time > 0" class="text-red-500 font-bold">
+                                            +{{ cir.extra_time }} min
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div *ngIf="cir.es_aseo" class="text-xs text-gray-700 mb-1 italic">
-                                    Aseo posterior a cirugía
-                                </div>
-
-                                <div *ngIf="!cir.es_aseo" class="text-xs mb-1">
-                                    Doctor: <strong>{{ getDoctorNombre(cir.doctor_id) }}</strong>
-                                </div>
-
-                                <div *ngIf="cir.es_aseo" class="text-xs mb-1 italic text-gray-700">
-                                    Equipo de aseo
-                                </div>
-
-                                <div class="text-xs">
-                                    Fecha: {{ cir.fecha }}
-                                </div>
-                                <div class="text-xs">
-                                    Inicio: {{ cir.hora_inicio }}
-                                </div>
-                                <div class="text-xs">
-                                    Fin estimado: {{ cir.hora_fin_estimada | date:'shortTime' }}
-                                </div>
-                                <div class="text-xs">
-                                    Extra: <strong>{{ cir.extra_time }} min</strong>
-                                </div>
-                                <div class="text-xs">
-                                    Estado: <strong>{{ cir.estado }}</strong>
-                                </div>
-
-                                <div class="flex justify-between mt-3" *ngIf="!cir.es_aseo">
-                                    <button class="btn btn-xs btn-outline-info" type="button"
-                                        (click)="editarCirugia(pab.id, cir)">
-                                        Editar
+                                <div class="mt-3 pt-2 border-t border-dashed border-gray-300 dark:border-gray-600">
+                                    
+                                    <button *ngIf="!cir.es_aseo && (cir.estado === 'EN_CURSO' || cir.estado === 'COMPLICADA')" 
+                                            type="button" 
+                                            class="btn btn-success btn-sm w-full mb-2 shadow-sm"
+                                            (click)="finalizarCirugia(cir)">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        Terminar
                                     </button>
 
-                                    <button class="btn btn-xs btn-outline-warning" type="button"
-                                        (click)="agregarExtraTime(cir)">
-                                        + Tiempo
-                                    </button>
+                                    <div class="flex justify-end gap-1">
+                                        
+                                        <ng-container *ngIf="!cir.es_aseo">
+                                            <button class="btn btn-xs btn-outline-primary" (click)="editarCirugia(cir)" title="Editar">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                            </button>
+                                            <button class="btn btn-xs btn-outline-warning" (click)="agregarExtraTime(cir)" title="+ Tiempo">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                                            </button>
+                                        </ng-container>
 
-                                    <button class="btn btn-xs btn-outline-danger" type="button"
-                                        (click)="eliminarCirugia(cir)">
-                                        X
-                                    </button>
+                                        <button class="btn btn-xs btn-outline-danger" (click)="eliminarCirugia(cir)" title="Eliminar">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <!-- Opcional: etiqueta visible en las tarjetas de ASEO -->
-                                <div *ngIf="cir.es_aseo" class="mt-3 text-xs font-semibold text-sky-700">
-                                    Limpieza / Aseo
-                                </div>
                             </div>
                         </div>
-
                     </div>
                 </ng-container>
             </ng-container>
+            <ng-template #noData>
+                <div class="w-full text-center py-10 text-gray-500">Cargando agenda de pabellones...</div>
+            </ng-template>
         </div>
     </div>
 
-    <!-- MODAL CREAR / EDITAR CIRUGÍA -->
     <modal #isAddCirugiaModal class="no-footer">
         <ng-template #modalHeader>
-            <div class="!font-medium">
-                {{ paramsCirugia.id ? 'Editar Cirugía' : 'Agregar Cirugía' }}
-            </div>
+            <div class="!font-medium">{{ paramsCirugia.id ? 'Editar Cirugía' : 'Agendar Cirugía' }}</div>
         </ng-template>
-
         <ng-template #modalBody>
             <form (ngSubmit)="guardarCirugia()" class="text-sm">
-
-                <div class="mb-3">
-                    <label class="block mb-1">Paciente</label>
-                    <select class="form-select" [(ngModel)]="paramsCirugia.paciente_id" name="paciente_id">
-                        <option [ngValue]="null">Seleccione...</option>
-                        <option *ngFor="let p of pacientes" [ngValue]="p.id">
-                            {{ p.nombre }} ({{ p.rut }})
-                        </option>
+                <div class="mb-4">
+                    <label>Pabellón</label>
+                    <select [(ngModel)]="paramsCirugia.pabellon_id" name="pabellon_id" class="form-select">
+                        <option *ngFor="let p of pabellones" [value]="p.id">{{ p.nombre }}</option>
                     </select>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Doctor</label>
-                    <select class="form-select" [(ngModel)]="paramsCirugia.doctor_id" name="doctor_id">
+                <div class="mb-4">
+                    <label>Tipo de Cirugía</label>
+                    <select [(ngModel)]="paramsCirugia.tipo_cirugia_id" name="tipo_cirugia_id" class="form-select">
                         <option [ngValue]="null">Seleccione...</option>
-                        <option *ngFor="let d of doctores" [ngValue]="d.id">
-                            {{ d.nombre_completo }} ({{ d.username }})
-                        </option>
+                        <option *ngFor="let t of tiposCirugia" [value]="t.id">{{ t.nombre }} ({{t.duracion_estimada}} min)</option>
                     </select>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Tipo de cirugía</label>
-                    <select class="form-select" [(ngModel)]="paramsCirugia.tipo_cirugia_id" name="tipo_cirugia_id">
+                <div class="mb-4">
+                    <label>Paciente</label>
+                    <select [(ngModel)]="paramsCirugia.paciente_id" name="paciente_id" class="form-select">
                         <option [ngValue]="null">Seleccione...</option>
-                        <option *ngFor="let t of tiposCirugia" [ngValue]="t.id">
-                            {{ t.nombre }} · {{ t.duracion_estimada }} min
-                        </option>
+                        <option *ngFor="let p of pacientes" [value]="p.id">{{ p.nombre }} - {{ p.rut }}</option>
                     </select>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Fecha</label>
-                    <input type="date" class="form-input" [(ngModel)]="paramsCirugia.fecha" name="fecha" />
+                <div class="mb-4">
+                    <label>Doctor</label>
+                    <select [(ngModel)]="paramsCirugia.doctor_id" name="doctor_id" class="form-select">
+                        <option [ngValue]="null">Seleccione...</option>
+                        <option *ngFor="let d of doctores" [value]="d.id">{{ d.nombre_completo }}</option>
+                    </select>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Hora inicio</label>
-                    <input type="time" class="form-input" [(ngModel)]="paramsCirugia.hora_inicio" name="hora_inicio" />
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label>Fecha</label>
+                        <input type="date" [(ngModel)]="paramsCirugia.fecha" name="fecha" class="form-input" />
+                    </div>
+                    <div>
+                        <label>Hora Inicio</label>
+                        <input type="time" [(ngModel)]="paramsCirugia.hora_inicio" name="hora_inicio" class="form-input" />
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Duración programada (min)</label>
-                    <input type="number" class="form-input" [(ngModel)]="paramsCirugia.duracion_programada"
-                        name="duracion_programada" />
-                    <p class="text-xs text-gray-500 mt-1">
-                        Si se deja vacío, se usará la duración estimada del tipo de cirugía.
-                    </p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label>Duración (min)</label>
+                        <input type="number" [(ngModel)]="paramsCirugia.duracion_programada" name="duracion_programada" class="form-input" />
+                    </div>
+                    <div>
+                        <label>Tiempo Extra</label>
+                        <input type="number" [(ngModel)]="paramsCirugia.extra_time" name="extra_time" class="form-input" />
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label class="block mb-1">Tiempo extra (min)</label>
-                    <input type="number" class="form-input" [(ngModel)]="paramsCirugia.extra_time" name="extra_time" />
-                </div>
-
-                <div class="mt-6 flex justify-end">
-                    <button type="button" class="btn btn-outline-danger" (click)="isAddCirugiaModal.close()">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">
-                        {{ paramsCirugia.id ? 'Actualizar' : 'Agregar' }}
-                    </button>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" class="btn btn-outline-danger" (click)="isAddCirugiaModal.close()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </ng-template>

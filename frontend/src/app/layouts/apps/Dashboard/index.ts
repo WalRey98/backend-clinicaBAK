@@ -36,9 +36,15 @@ export class DashboardComponent implements OnInit {
         this.initStore();
     }
 
-    ngOnInit() {
+ngOnInit() {
+    this.cargarDatosDashboard();
+    
+    // Auto-actualizar cada 30 segundos para detectar cambios y alertas
+    setInterval(() => {
         this.cargarDatosDashboard();
-    }
+        // Aquí podrías comparar los datos nuevos con los viejos y lanzar Swal.fire() si algo cambió
+    }, 30000); 
+}
 
     async initStore() {
         this.storeData.select((d) => d.index).subscribe((d) => {
