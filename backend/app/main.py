@@ -1,10 +1,10 @@
 # app/main.py
 from fastapi import FastAPI
 from app.db.database import Base, engine
-from app.api.endpoints import pabellones, cirugias, auth, usuarios, pacientes, tipos_cirugia
+# AGREGAMOS 'dashboard' AQUÍ
+from app.api.endpoints import pabellones, cirugias, auth, usuarios, pacientes, tipos_cirugia, dashboard 
 from app.db import models
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import pabellones, cirugias, auth, usuarios, pacientes, tipos_cirugia, dashboard
 
 # Crea todas las tablas en la base de datos (solo si no existen)
 models.Base.metadata.create_all(bind=engine)
@@ -37,6 +37,8 @@ app.include_router(cirugias.router, prefix="/cirugias", tags=["Cirugías"])
 app.include_router(usuarios.router, prefix="/usuarios", tags=["Usuarios"])
 app.include_router(pacientes.router, prefix="/pacientes", tags=["Pacientes"])
 app.include_router(tipos_cirugia.router, prefix="/tipos-cirugia", tags=["Tipos de Cirugía"])
+
+# NUEVO ROUTER PARA DASHBOARD
 app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 
 @app.get("/", tags=["Root"])

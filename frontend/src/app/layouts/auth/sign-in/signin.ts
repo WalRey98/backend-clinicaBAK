@@ -116,6 +116,5 @@ export class SigninComponent implements OnInit, OnDestroy { // Nombre corregido:
   }
 
   ngOnDestroy() {
-    // Limpieza si fuera necesaria
   }
 }
