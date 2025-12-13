@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule, NgIf, DatePipe } from '@angular/common'; // DatePipe importante
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortablejsModule } from '@dustfoundation/ngx-sortablejs';
@@ -11,16 +11,12 @@ import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { DataTableModule } from '@bhplugin/ng-datatable';
 import { IconModule } from 'src/app/shared/icon/icon.module';
 import { AppLayout } from './app-layout';
-
-// --- CORRECCIÓN AQUÍ: Importamos el nombre correcto ---
-import { DashboardComponent } from './Dashboard'; 
-
+import { DashboardComponent } from './Dashboard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalModule } from 'angular-custom-modal';
 import { ListuserComponent } from './Listuser/listuser';
 import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts'; // <--- ESTE ES CRUCIAL
 import { RutDirective } from '@shared/directives/formatrut/rut.directive';
 import { PacientesComponent } from './pacientes/pacientes';
 import { PabellonesComponent } from './pabellones/pabellones';
@@ -33,13 +29,12 @@ const routes: Routes = [
         component: AppLayout,
         children: [
             { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
-            // --- CORRECCIÓN AQUÍ: Usamos DashboardComponent ---
             { path: 'Dashboard', component: DashboardComponent, title: 'Dashboard | CLINICA BAK' },
-            { path: 'list-user', component: ListuserComponent, title: 'Listado de Usuarios | CLINICA BAK' },
-            { path: 'pacientes', component: PacientesComponent, title: 'Listado de Pacientes | CLINICA BAK' },
-            { path: 'pabellones', component: PabellonesComponent, title: 'Listado de Pabellones | CLINICA BAK' },
-            { path: 'agendamiento', component: ScrumCirugiasComponent, title: 'Agenda de Pabellones | CLINICA BAK' },
-            { path: 'cirugias', component: TiposCirugiaComponent, title: 'Tipos de Cirugía | CLINICA BAK' },
+            { path: 'list-user', component: ListuserComponent, title: 'Listado de Usuarios' },
+            { path: 'pacientes', component: PacientesComponent, title: 'Listado de Pacientes' },
+            { path: 'pabellones', component: PabellonesComponent, title: 'Listado de Pabellones' },
+            { path: 'agendamiento', component: ScrumCirugiasComponent, title: 'Agenda de Pabellones' },
+            { path: 'cirugias', component: TiposCirugiaComponent, title: 'Tipos de Cirugía' },
             { path: '**', redirectTo: 'Dashboard', pathMatch: 'full' },
         ],
     },
@@ -53,10 +48,7 @@ const routes: Routes = [
         ReactiveFormsModule,
         ModalModule,
         SortablejsModule,
-        NgScrollbarModule.withConfig({
-            visibility: 'hover',
-            appearance: 'standard',
-        }),
+        NgScrollbarModule,
         QuillModule.forRoot(),
         FullCalendarModule,
         NgxTippyModule,
@@ -66,17 +58,17 @@ const routes: Routes = [
         NgIf,
         MenuModule,
         TranslateModule,
-        NgApexchartsModule,
+        NgApexchartsModule, // <--- Verifica que esté aquí
         RutDirective,
     ],
     declarations: [
         ListuserComponent,
-        // --- CORRECCIÓN AQUÍ: Declaramos el componente correcto ---
-        DashboardComponent, 
+        DashboardComponent,
         PacientesComponent,
         PabellonesComponent,
         ScrumCirugiasComponent,
         TiposCirugiaComponent,
     ],
+    providers: [DatePipe]
 })
 export class AppsModule { }

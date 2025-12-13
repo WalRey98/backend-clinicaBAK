@@ -1,132 +1,150 @@
 <div>
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h2 class="text-2xl font-bold dark:text-white-light">Panel de Control Quirúrgico</h2>
-            <p class="text-white-dark mt-1">Resumen operativo del {{ fechaHoy | date:'fullDate' }}</p>
+            <h1 class="text-2xl font-bold tracking-tight text-white-dark">Panel de Control</h1>
+            <p class="text-sm text-gray-500">Resumen operativo de hoy.</p>
         </div>
-        <button type="button" class="btn btn-primary btn-sm" (click)="cargarDatos()">
-            🔄 Actualizar
+        <button type="button" class="btn btn-primary shadow-lg" (click)="cargarDatosDashboard()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" [class.animate-spin]="isLoading" class="mr-2">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+            </svg>
+            Actualizar
         </button>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
         
-        <div class="panel bg-gradient-to-r from-cyan-500 to-cyan-400 text-white">
-            <div class="flex justify-between">
-                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">Cirugías Hoy</div>
-            </div>
-            <div class="flex items-center mt-5">
-                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.total_hoy }}</div>
-                <div class="badge bg-white/30 text-white shadow-md absolute right-4 mt-2">Programadas</div>
-            </div>
-        </div>
-
-        <div class="panel bg-gradient-to-r from-violet-500 to-violet-400 text-white">
-            <div class="flex justify-between">
-                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">En Pabellón</div>
-            </div>
-            <div class="flex items-center mt-5">
-                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.en_ejecucion }}</div>
-                <div class="text-xs font-medium bg-white/30 px-2 py-1 rounded">Activas ahora</div>
+        <div class="panel h-full p-5 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-xl rounded-xl border-0">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="text-lg font-semibold opacity-90">Total Hoy</div>
+                    <div class="mt-2 text-4xl font-bold">{{ kpis.total_hoy }}</div>
+                    <div class="mt-1 text-sm font-medium opacity-80">Cirugías agendadas</div>
+                </div>
+                <div class="p-3 bg-white/20 rounded-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    </svg>
+                </div>
             </div>
         </div>
 
-        <div class="panel bg-gradient-to-r from-rose-500 to-rose-400 text-white">
-            <div class="flex justify-between">
-                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">Alertas / Retrasos</div>
-            </div>
-            <div class="flex items-center mt-5">
-                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.retrasos }}</div>
-                <div class="text-white-light text-xs mt-1" *ngIf="kpis.retrasos > 0">⚠️ Atención requerida</div>
-                <div class="text-white-light text-xs mt-1" *ngIf="kpis.retrasos === 0">✅ Todo a tiempo</div>
+        <div class="panel h-full p-5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-xl rounded-xl border-0">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="text-lg font-semibold opacity-90">En Curso</div>
+                    <div class="mt-2 text-4xl font-bold">{{ kpis.en_ejecucion }}</div>
+                    <div class="mt-1 text-sm font-medium opacity-80">Pabellones ocupados</div>
+                </div>
+                <div class="p-3 bg-white/20 rounded-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
             </div>
         </div>
 
-        <div class="panel bg-gradient-to-r from-blue-500 to-blue-400 text-white">
-            <div class="flex justify-between">
-                <div class="ltr:mr-1 rtl:ml-1 text-md font-semibold">En Aseo</div>
+        <div class="panel h-full p-5 bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-xl rounded-xl border-0">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="text-lg font-semibold opacity-90">En Aseo</div>
+                    <div class="mt-2 text-4xl font-bold">{{ kpis.aseo_activo }}</div>
+                    <div class="mt-1 text-sm font-medium opacity-80">Limpieza terminal</div>
+                </div>
+                <div class="p-3 bg-white/20 rounded-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                    </svg>
+                </div>
             </div>
-            <div class="flex items-center mt-5">
-                <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ kpis.aseo_activo }}</div>
-                <div class="text-xs font-medium bg-white/30 px-2 py-1 rounded">Pabellones</div>
+        </div>
+
+        <div class="panel h-full p-5 bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-xl rounded-xl border-0">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="text-lg font-semibold opacity-90">Retrasos</div>
+                    <div class="mt-2 text-4xl font-bold">{{ kpis.retrasos }}</div>
+                    <div class="mt-1 text-sm font-medium opacity-80">Cirugías complicadas</div>
+                </div>
+                <div class="p-3 bg-white/20 rounded-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
         
-        <div class="panel h-full">
-            <div class="flex items-center justify-between mb-5">
-                <h5 class="font-semibold text-lg dark:text-white-light">Próximos Ingresos</h5>
-            </div>
-            <div class="table-responsive">
-                <table class="table-hover">
-                    <thead>
-                        <tr>
-                            <th>Hora</th>
-                            <th>Paciente</th>
-                            <th>Procedimiento</th>
-                            <th>Pabellón</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="proximasCirugias.length > 0">
-                        <tr *ngFor="let cir of proximasCirugias" class="group hover:bg-gray-50 dark:hover:bg-gray-900">
-                            <td class="whitespace-nowrap font-bold text-primary">{{ cir.hora }}</td>
-                            <td class="font-medium">{{ cir.paciente }}</td>
-                            <td class="text-xs text-gray-500">{{ cir.tipo }}</td>
-                            <td><span class="badge badge-outline-info">{{ cir.pabellon }}</span></td>
-                        </tr>
-                    </tbody>
-                    <tbody *ngIf="proximasCirugias.length === 0">
-                        <tr>
-                            <td colspan="4" class="text-center py-4 text-gray-500">
-                                No hay más ingresos programados por hoy.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="xl:col-span-1">
+            <div class="panel h-full">
+                <div class="mb-5 flex items-center justify-between">
+                    <h5 class="text-lg font-semibold dark:text-white-light">Estado de Cirugías</h5>
+                </div>
+                <div class="relative" *ngIf="cirugiasChart">
+                    <apx-chart 
+                        [series]="cirugiasChart.series" 
+                        [chart]="cirugiasChart.chart"
+                        [plotOptions]="cirugiasChart.plotOptions"
+                        [labels]="cirugiasChart.labels" 
+                        [colors]="cirugiasChart.colors"
+                        [legend]="cirugiasChart.legend" 
+                        [stroke]="cirugiasChart.stroke"
+                        [dataLabels]="cirugiasChart.dataLabels" 
+                        [tooltip]="cirugiasChart.tooltip">
+                    </apx-chart>
+                </div>
+                <div *ngIf="!cirugiasChart" class="flex h-64 items-center justify-center text-gray-400 bg-gray-50 rounded-lg">
+                    <p>Cargando gráfico...</p>
+                </div>
             </div>
         </div>
 
-        <div class="panel h-full">
-            <div class="flex items-center justify-between mb-5">
-                <h5 class="font-semibold text-lg dark:text-white-light">Estado de la Clínica</h5>
-            </div>
-            
-            <div class="space-y-9 mt-4">
-                <div class="flex items-center">
-                    <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 rounded-full bg-primary/10 flex justify-center items-center text-primary">
-                        📊
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between font-semibold mb-2 text-base">
-                            <h6>Eficiencia Quirúrgica</h6>
-                            <span class="text-primary">85%</span>
-                        </div>
-                        <div class="w-full rounded-full h-2.5 bg-dark-light dark:bg-dark-light/10 shadow">
-                            <div class="bg-gradient-to-r from-primary to-primary/60 w-[85%] h-2.5 rounded-full"></div>
-                        </div>
-                    </div>
+        <div class="xl:col-span-2">
+            <div class="panel h-full">
+                <div class="mb-5 flex items-center justify-between">
+                    <h5 class="text-lg font-semibold dark:text-white-light">Próximas Cirugías</h5>
+                    <a routerLink="/app/agendamiento" class="text-primary hover:underline font-bold text-sm">Ver Agenda</a>
                 </div>
-
-                <div class="flex items-center">
-                    <div class="w-9 h-9 ltr:mr-3 rtl:ml-3 rounded-full bg-success/10 flex justify-center items-center text-success">
-                        🧹
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between font-semibold mb-2 text-base">
-                            <h6>Disponibilidad Aseo</h6>
-                            <span class="text-success">90%</span>
-                        </div>
-                        <div class="w-full rounded-full h-2.5 bg-dark-light dark:bg-dark-light/10 shadow">
-                            <div class="bg-gradient-to-r from-success to-success/60 w-[90%] h-2.5 rounded-full"></div>
-                        </div>
-                    </div>
+                
+                <div class="table-responsive">
+                    <table class="table-hover w-full">
+                        <thead>
+                            <tr class="border-b dark:border-[#191e3a]">
+                                <th class="py-3">Hora</th>
+                                <th class="py-3">Paciente</th>
+                                <th class="py-3">Procedimiento</th>
+                                <th class="py-3">Pabellón</th>
+                                <th class="py-3 text-center">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cir of proximasCirugias" class="group hover:bg-gray-50 dark:hover:bg-[#1a2941] transition">
+                                <td class="font-bold text-primary whitespace-nowrap">
+                                    {{ cir.hora }}
+                                </td>
+                                <td class="font-medium text-gray-700 dark:text-gray-300">{{ cir.paciente }}</td>
+                                <td>
+                                    <span class="badge bg-primary/10 text-primary rounded-md px-2 py-1">{{ cir.cirugia }}</span>
+                                </td>
+                                <td class="text-gray-600 dark:text-gray-400">{{ cir.pabellon }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-blue-500 shadow-sm">Programada</span>
+                                </td>
+                            </tr>
+                            <tr *ngIf="proximasCirugias.length === 0">
+                                <td colspan="5" class="py-12 text-center text-gray-500">
+                                    No hay cirugías pendientes para hoy.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            
-            <div class="mt-6 p-4 bg-gray-100 rounded text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                <p>💡 <strong>Tip:</strong> Revisa el tablero Scrum para mover cirugías atrasadas y liberar pabellones.</p>
             </div>
         </div>
     </div>
