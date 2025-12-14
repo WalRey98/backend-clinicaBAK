@@ -6,15 +6,27 @@
     <title>CLINICA BAK</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Favicon -->
+    
     <link rel="icon" type="icon" href="assets/images/company.svg" />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <style>
+        /* Forzar que las alertas (SweetAlert2) salgan siempre encima de los modales */
+        .swal2-container {
+            z-index: 100000 !important;
+        }
+        /* Opcional: Asegurar que el fondo oscuro de la alerta también cubra todo */
+        .swal2-backdrop-show {
+            z-index: 100000 !important;
+        }
+    </style>
+
 </head>
 
 <body>

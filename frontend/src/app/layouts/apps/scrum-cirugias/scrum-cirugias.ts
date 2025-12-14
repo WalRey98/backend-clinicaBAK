@@ -27,30 +27,22 @@ export class ScrumCirugiasComponent implements OnInit, OnDestroy {
     tiposCirugia: any[] = [];
     pollingInterval: any;
 
-    paramsCirugia: any = {
-        id: null, paciente_id: null, doctor_id: null, tipo_cirugia_id: null,
-        pabellon_id: null, fecha: '', hora_inicio: '', duracion_programada: '', extra_time: 0
-    };
-
+    paramsCirugia: any = { id: null, paciente_id: null, doctor_id: null, tipo_cirugia_id: null, pabellon_id: null, fecha: '', hora_inicio: '', duracion_programada: '', extra_time: 0 };
     @ViewChild('isAddCirugiaModal') isAddCirugiaModal!: ModalComponent;
 
-    constructor(
-        private cirugiasService: CirugiasService,
-        private api: ApiService,
-        private cdr: ChangeDetectorRef 
-    ) { }
+    constructor(private cirugiasService: CirugiasService, private api: ApiService, private cdr: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.cargarDatos();
         this.pollingInterval = setInterval(() => this.cargarDatos(true), 10000);
     }
-
     ngOnDestroy() { if (this.pollingInterval) clearInterval(this.pollingInterval); }
 
     cargarDatos(silent = false) {
-        if (!silent) this.cirugiasService.actualizarEstados().subscribe();
-        this.cargarReferenciales();
-        this.cargarPabellones(silent);
+        this.cirugiasService.actualizarEstados().subscribe({
+            next: () => { this.cargarReferenciales(); this.cargarPabellones(silent); },
+            error: () => { this.cargarReferenciales(); this.cargarPabellones(silent); }
+        });
     }
 
     cargarReferenciales() {
@@ -60,152 +52,144 @@ export class ScrumCirugiasComponent implements OnInit, OnDestroy {
     }
 
     cargarPabellones(silent = false) {
-        this.api.getPabellones().pipe(catchError(() => of([]))).subscribe((pabellones: any[]) => {
-            if (!pabellones || pabellones.length === 0) return;
-
-            const llamadas$ = pabellones.map(p => this.cirugiasService.listarCirugias(p.id).pipe(catchError(() => of([]))));
+        this.api.getPabellones().pipe(catchError(() => of([]))).subscribe((pabellonesData: any[]) => {
+            if (!pabellonesData) return;
+            const llamadas$ = pabellonesData.map(p => this.cirugiasService.listarCirugias(p.id).pipe(catchError(() => of([]))));
 
             forkJoin(llamadas$).subscribe((resultados: any[]) => {
-                const nuevosDatos = pabellones.map((p, i) => ({ ...p, tasks: resultados[i] || [] }));
+                const datosEntrantes = pabellonesData.map((p, i) => ({ ...p, tasks: resultados[i] || [] }));
 
-                if (silent && this.pabellones.length > 0) this.verificarCambios(this.pabellones, nuevosDatos);
-
-                if (!silent) { this.pabellones = []; this.cdr.detectChanges(); }
-                setTimeout(() => {
-                    this.pabellones = [...nuevosDatos];
-                    this.cdr.detectChanges();
-                }, silent ? 0 : 50);
-            });
-        });
-    }
-
-    verificarCambios(viejo: any[], nuevo: any[]) {
-        nuevo.forEach((pabNuevo: any) => {
-            pabNuevo.tasks.forEach((tareaNueva: any) => {
-                const pabViejo = viejo.find(p => p.id === pabNuevo.id);
-                const tareaVieja = pabViejo?.tasks.find((t: any) => t.id === tareaNueva.id);
-                if (tareaVieja && tareaVieja.estado !== tareaNueva.estado) {
-                    this.mostrarAlerta(tareaNueva.estado, pabNuevo.nombre);
+                if (!silent || this.pabellones.length === 0) {
+                    this.pabellones = datosEntrantes;
+                } else {
+                    this.fusionarDatos(datosEntrantes);
                 }
+                
+                // Forzamos actualización de vista
+                this.pabellones = [...this.pabellones];
+                this.cdr.detectChanges();
             });
         });
     }
 
-    mostrarAlerta(estado: string, pabellon: string) {
-        const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 4000, timerProgressBar: true });
-        let msg = ''; let icon: any = 'info';
-        if (estado === 'EN_CURSO') { msg = `🏥 ${pabellon}: Cirugía INICIADA`; icon = 'success'; }
-        else if (estado === 'FINALIZADA') { msg = `✅ ${pabellon}: Cirugía FINALIZADA`; icon = 'success'; }
-        else if (estado === 'EN_ASEO') { msg = `🧹 ${pabellon}: Comenzó ASEO`; icon = 'warning'; }
-        else if (estado === 'COMPLICADA') { msg = `⚠️ ${pabellon}: Cirugía ATRASADA`; icon = 'error'; }
-        if (msg) Toast.fire({ icon: icon, title: msg });
+    fusionarDatos(datosEntrantes: any[]) {
+        datosEntrantes.forEach(pabEntrante => {
+            let pabLocal = this.pabellones.find(p => p.id === pabEntrante.id);
+            if (!pabLocal) { this.pabellones.push(pabEntrante); return; }
+
+            pabLocal.tasks = pabLocal.tasks.filter((tLocal: any) => pabEntrante.tasks.find((tNuevo: any) => tNuevo.id === tLocal.id));
+            pabEntrante.tasks.forEach((tNuevo: any) => {
+                const tLocal = pabLocal.tasks.find((t: any) => t.id === tNuevo.id);
+                if (tLocal) Object.assign(tLocal, tNuevo); else pabLocal.tasks.push(tNuevo);
+            });
+        });
     }
 
-    // --- NUEVA FUNCIÓN PARA CONTADORES SEPARADOS ---
-    getCounts(pab: any) {
-        const total = pab.tasks?.length || 0;
-        const aseos = pab.tasks?.filter((t: any) => t.es_aseo).length || 0;
-        const cirugias = total - aseos;
-        return { cirugias, aseos };
+    // 🔥 ESTA ES LA FUNCIÓN QUE USAREMOS EN EL HTML PARA CONTAR EN VIVO 🔥
+    getConteos(pab: any) {
+        const tasks = pab.tasks || [];
+        const aseos = tasks.filter((t: any) => (t.estado || '').toUpperCase() === 'EN_ASEO').length;
+        const cirugias = tasks.filter((t: any) => {
+            const s = (t.estado || '').toUpperCase();
+            return s !== 'EN_ASEO' && s !== 'FINALIZADA' && s !== 'CANCELADA';
+        }).length;
+        const mins = tasks.reduce((acc: number, c: any) => acc + (Number(c.duracion_programada)||0) + (Number(c.extra_time)||0), 0);
+        
+        return { cirugias, aseos, mins };
     }
 
-    abrirModalCrear(pabellonId: number) { this.editarCirugia(pabellonId); }
+    trackByFn(index: number, item: any) { return item.id; }
 
-    editarCirugia(pabellonId: number | any, cirugia: any = null) {
-        if (typeof pabellonId === 'object') { cirugia = pabellonId; pabellonId = cirugia.pabellon_id; }
-        if (cirugia) this.paramsCirugia = { ...cirugia };
-        else this.paramsCirugia = {
-            id: null, paciente_id: null, doctor_id: null, tipo_cirugia_id: null, pabellon_id: pabellonId,
-            fecha: new Date().toISOString().split('T')[0], hora_inicio: '', duracion_programada: '', extra_time: 0
-        };
-        this.isAddCirugiaModal.open();
+    // --- ACCIONES ---
+    comenzarAseo(cirugia: any) {
+        Swal.fire({
+            title: '¿Terminar Cirugía?', text: "El pabellón pasará a LIMPIEZA.", icon: 'info',
+            showCancelButton: true, confirmButtonText: 'Sí, iniciar aseo', confirmButtonColor: '#7e22ce'
+        }).then((r) => {
+            if (r.isConfirmed) this.cirugiasService.updateEstado(cirugia.id, 'EN_ASEO').subscribe(() => this.cargarDatos(true));
+        });
     }
 
-    guardarCirugia() {
-        const data = structuredClone(this.paramsCirugia);
+    finalizarAseo(cirugia: any) {
+        Swal.fire({
+            title: '¿Pabellón Listo?', text: "Se marcará como FINALIZADO.", icon: 'success',
+            showCancelButton: true, confirmButtonText: 'Sí, finalizar', confirmButtonColor: '#00ab55'
+        }).then((r) => {
+            if (r.isConfirmed) this.cirugiasService.updateEstado(cirugia.id, 'FINALIZADA').subscribe(() => this.cargarDatos(true));
+        });
+    }
+
+    sortableOptionsFor(pabellonId: number) {
+        if (!this.sortableCache[pabellonId]) {
+            this.sortableCache[pabellonId] = {
+                group: 'cirugias', animation: 150,
+                onEnd: (event: any) => {
+                    const cid = Number(event.item.getAttribute('data-cirugia-id'));
+                    const pid = Number(event.to.getAttribute('data-pabellon-id'));
+                    const oldPid = Number(event.from.getAttribute('data-pabellon-id'));
+                    if (pid && cid && pid !== oldPid) {
+                        this.cirugiasService.moverCirugia(cid, pid).subscribe({
+                            next: () => this.cargarDatos(true),
+                            error: () => { this.cargarDatos(); Swal.fire('Error', 'No se pudo mover', 'error'); }
+                        });
+                    }
+                }
+            };
+        } return this.sortableCache[pabellonId];
+    }
+
+    guardarCirugia(): void {
+        const data = { ...this.paramsCirugia };
         data.paciente_id = Number(data.paciente_id); data.doctor_id = Number(data.doctor_id);
         data.tipo_cirugia_id = Number(data.tipo_cirugia_id); data.pabellon_id = Number(data.pabellon_id);
-        data.duracion_programada = data.duracion_programada ? Number(data.duracion_programada) : null;
-        data.extra_time = data.extra_time ? Number(data.extra_time) : 0;
+        data.duracion_programada = Number(data.duracion_programada); data.extra_time = Number(data.extra_time);
 
         if (!data.fecha || !data.hora_inicio || !data.tipo_cirugia_id) {
-            Swal.fire('Error', 'Complete los campos obligatorios', 'warning');
+            Swal.fire('Error', 'Datos incompletos', 'warning');
             return;
         }
+        if (!data.id) delete data.id;
 
-        if (!data.id) {
-            delete data.id;
-            this.cirugiasService.crearCirugia(data).subscribe(() => {
-                this.cargarDatos(); this.isAddCirugiaModal.close(); Swal.fire('Guardado', 'Cirugía agendada', 'success');
-            }, (err) => Swal.fire('Error', err.error.detail || 'Error', 'error'));
-        } else {
-            this.cirugiasService.actualizarCirugia(data.id, data).subscribe(() => {
-                this.cargarDatos(); this.isAddCirugiaModal.close(); Swal.fire('Actualizado', 'Cirugía editada', 'success');
-            });
-        }
-    }
-
-    finalizarCirugia(cirugia: any) {
-        Swal.fire({
-            title: '¿Finalizar Cirugía?', text: "Se liberará el pabellón y activará el Aseo.", icon: 'question',
-            showCancelButton: true, confirmButtonColor: '#00ab55', confirmButtonText: 'Sí, finalizar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.cirugiasService.updateEstado(cirugia.id, 'FINALIZADA').subscribe({
-                    next: () => { setTimeout(() => { this.cargarDatos(); Swal.fire('Listo', 'Cirugía finalizada', 'success'); }, 500); },
-                    error: () => Swal.fire('Error', 'No se pudo conectar', 'error')
-                });
-            }
+        const req$ = data.id ? this.cirugiasService.actualizarCirugia(data.id, data) : this.cirugiasService.crearCirugia(data);
+        req$.subscribe({
+            next: () => { this.cargarDatos(); this.isAddCirugiaModal.close(); Swal.fire('Éxito', 'Guardado', 'success'); },
+            error: (e) => Swal.fire('Error', e.error?.detail || 'Choque de horario', 'error')
         });
     }
 
-    agregarExtraTime(cirugia: any) {
-        Swal.fire({
-            title: 'Tiempo extra (min)', input: 'number', inputValue: '30', showCancelButton: true, confirmButtonText: 'Agregar',
-        }).then(result => {
-            if (result.isConfirmed) {
-                this.cirugiasService.actualizarExtraTime(cirugia.id, (cirugia.extra_time || 0) + Number(result.value)).subscribe(() => this.cargarDatos());
-            }
+    abrirModalCrear(pid: number) { this.editarCirugia(pid); }
+    editarCirugia(arg: any, c: any = null) {
+        if (c) this.paramsCirugia = { ...c };
+        else this.paramsCirugia = { id: null, pabellon_id: arg, fecha: new Date().toISOString().split('T')[0], hora_inicio: '', duracion_programada: 60, extra_time: 0 };
+        this.isAddCirugiaModal.open();
+    }
+    agregarExtraTime(c: any) {
+        Swal.fire({ title: '+ Minutos', input: 'number', inputValue: '30', showCancelButton: true }).then(r => {
+            if (r.isConfirmed) this.cirugiasService.actualizarExtraTime(c.id, (c.extra_time || 0) + Number(r.value)).subscribe(() => this.cargarDatos());
         });
     }
-
-    eliminarCirugia(cirugia: any) {
-        Swal.fire({
-            title: '¿Eliminar?', text: 'Irreversible', icon: 'warning', showCancelButton: true, confirmButtonText: 'Eliminar', confirmButtonColor: '#d33'
-        }).then((r) => {
-            if (r.isConfirmed) {
-                this.cirugiasService.eliminarCirugia(cirugia.id).subscribe(() => {
-                    this.cargarDatos(); Swal.fire('Eliminado', 'Item eliminado', 'success');
-                });
-            }
+    eliminarCirugia(c: any) {
+        Swal.fire({ title: 'Eliminar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Sí', confirmButtonColor: '#d33' }).then(r => {
+            if (r.isConfirmed) this.cirugiasService.eliminarCirugia(c.id).subscribe(() => this.cargarDatos());
         });
     }
 
     getCardBorder(cir: any) {
-        if (cir.es_aseo) return 'border-l-4 border-purple-500 bg-purple-50';
         switch (cir.estado) {
             case 'EN_CURSO': return 'border-l-4 border-yellow-500 bg-yellow-50';
+            case 'EN_ASEO': return 'border-l-4 border-purple-500 bg-purple-100'; 
             case 'FINALIZADA': return 'border-l-4 border-green-500 opacity-75';
             case 'COMPLICADA': return 'border-l-4 border-red-500 bg-red-50';
-            case 'CANCELADA': return 'border-l-4 border-gray-500 bg-gray-200';
             default: return 'border-l-4 border-blue-500 bg-white';
         }
     }
-
     getEstadoBadge(estado: string) {
-        switch (estado) {
-            case 'PROGRAMADA': return 'badge-outline-primary';
-            case 'EN_CURSO': return 'badge-outline-warning';
-            case 'FINALIZADA': return 'badge-outline-success';
-            case 'EN_ASEO': return 'badge-outline-info';
-            case 'COMPLICADA': return 'badge-outline-danger';
-            default: return 'badge-outline-secondary';
-        }
+        if (estado === 'EN_ASEO') return 'badge-outline-info';
+        if (estado === 'EN_CURSO') return 'badge-outline-warning';
+        if (estado === 'FINALIZADA') return 'badge-outline-success';
+        return 'badge-outline-primary';
     }
-
-    sortableOptionsFor(pabellonId: number) { return this.sortableCache[pabellonId] || (this.sortableCache[pabellonId] = { group: 'cirugias', animation: 150 }); }
-    getPacienteNombre(id: number): string { return this.pacientes.find(p => p.id === id)?.nombre || 'Sin Paciente'; }
-    getDoctorNombre(id: number): string { return this.doctores.find(d => d.id === id)?.nombre_completo || 'Sin Doctor'; }
-    getTipoNombre(id: number): string { return this.tiposCirugia.find(t => t.id === id)?.nombre || 'Procedimiento'; }
-    getTotalMinutos(pab: any): number { return (pab.tasks || []).reduce((acc: number, c: any) => acc + (c.duracion_programada || 0) + (c.extra_time || 0), 0); }
+    getPacienteNombre(id: number): string { return this.pacientes.find(p => p.id === id)?.nombre || 'Paciente'; }
+    getDoctorNombre(id: number): string { return this.doctores.find(d => d.id === id)?.nombre_completo || 'Doctor'; }
+    getTipoNombre(id: number): string { return this.tiposCirugia.find(t => t.id === id)?.nombre || 'Cirugía'; }
 }
