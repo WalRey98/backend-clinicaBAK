@@ -1,0 +1,96 @@
+<div>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-xl">Pabellones</h2>
+
+        <div class="flex w-full gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <button class="btn btn-primary" (click)="edit()">
+                <icon-plus class="mr-2" /> Agregar Pabellón
+            </button>
+
+            <div class="relative">
+                <input
+                    type="text"
+                    placeholder="Buscar pabellón"
+                    class="form-input peer py-2 pr-10"
+                    [(ngModel)]="searchTerm"
+                    (input)="searchItems()"
+                />
+                <div class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-500">
+                    <icon-search></icon-search>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel mt-5 p-0">
+        <div class="table-responsive">
+            <table class="table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>¿Compleja?</th>
+                        <th>Capacidad</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of filterdList">
+                        <td>{{ p.id }}</td>
+                        <td>{{ p.nombre }}</td>
+                        <td>{{ p.es_compleja ? 'Sí' : 'No' }}</td>
+                        <td>{{ p.capacidad }}</td>
+
+                        <td class="mt-8 flex items-center justify-center gap-4">
+                            <button class="btn btn-sm btn-outline-primary" (click)="edit(p)">
+                                Editar
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-danger" (click)="delete(p)">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <modal #addModal class="no-footer">
+        <ng-template #modalHeader>
+            <div class="font-medium">
+                {{ params.controls['id'].value ? 'Editar Pabellón' : 'Agregar Pabellón' }}
+            </div>
+        </ng-template>
+
+        <ng-template #modalBody>
+            <form [formGroup]="params" (ngSubmit)="save()">
+                <div class="mb-4">
+                    <label>Nombre</label>
+                    <input class="form-input" formControlName="nombre" />
+                </div>
+
+                <div class="mb-4">
+                    <label>Complejidad</label>
+                    <select class="form-input" formControlName="es_compleja">
+                        <option [value]="true">Compleja</option>
+                        <option [value]="false">Simple</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label>Capacidad</label>
+                    <input type="number" class="form-input" formControlName="capacidad" />
+                </div>
+
+                <div class="flex items-center justify-center gap-4">
+                    <button type="button" class="btn btn-outline-danger" (click)="addModal.close()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary ml-4">
+                        {{ params.controls['id'].value ? 'Actualizar' : 'Agregar' }}
+                    </button>
+                </div>
+            </form>
+        </ng-template>
+    </modal>
+</div>

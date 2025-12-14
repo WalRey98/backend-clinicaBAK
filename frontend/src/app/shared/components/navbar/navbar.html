@@ -1,0 +1,203 @@
+<nav class="top-0 left-0 z-50 w-full text-white ">
+  <div class="container mx-auto flex flex-wrap items-center justify-between py-4 px-6">
+
+    <!-- Logo -->
+    <div class="cursor-pointer flex items-center">
+      <a (click)="scrollToSection('home')" class=" flex shrink-0 items-center">
+        <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="/assets/images/logo.svg" alt="" />
+        <span
+          class=" align-middle text-2xl font-bold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline font-handwritten">
+          VieW
+        </span>
+      </a>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="hidden lg:flex flex-grow items-center justify-center">
+      <ul class="flex space-x-6 list-none">
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('home')">
+            {{'Inicio' | translate}}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('features')">
+            {{'Características' | translate}}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('services')">
+            {{'Servicios' | translate}}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('planes')">
+            {{'Planes' | translate}}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('about')">
+            {{'Nosotros' | translate}}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class=" cursor-pointer text-white-700 hover:text-orange-500 active:text-gray-300 text-sm uppercase font-semibold"
+            (click)="scrollToSection('contact')">
+            {{'Contacto' | translate}}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="hidden lg:flex end-5">
+      <div class="dropdown">
+        <div hlMenu>
+          <button type="button" hlMenuButton
+            class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 text-white hover:border-primary hover:text-white">
+            <div>
+              <img [src]="'/assets/images/flags/'+ store.locale.toUpperCase() + '.svg'" alt="image"
+                class="h-5 w-5 rounded-full object-cover" />
+            </div>
+            <div class="text-base font-bold uppercase">{{ store.locale }}</div>
+            <span class="shrink-0">
+              <icon-caret-down />
+            </span>
+          </button>
+          <ul *hlMenuItems @toggleAnimation
+            class="top-11 grid w-[280px] grid-cols-2 gap-2 !px-2 font-semibold text-dark ltr:-right-14 rtl:-left-14 dark:text-white-dark dark:text-white-light/90 sm:ltr:-right-2 sm:rtl:-left-2">
+            <li *ngFor="let item of store.languageList;">
+              <button *hlMenuItem="let menuItem" type="button" class="w-full hover:text-primary"
+                [ngClass]="{ 'bg-primary/10 text-primary': translate.currentLang === item.code }"
+                (click)="changeLanguage(item)">
+                <img class="h-5 w-5 rounded-full object-cover"
+                  [src]="'/assets/images/flags/'+ item.code.toUpperCase() + '.svg'" alt="" />
+                <span class="ltr:ml-3 rtl:mr-3">{{ item.name }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="hidden lg:flex end-5 ms-6">
+      <button
+      class="w-10 h-10 rounded-full bg-white text-gray-700 hover:bg-gray-500 flex items-center justify-center shadow"
+      [routerLink]="['/auth/signin']" title="Mi cuenta">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M5.121 17.804A13.938 13.938 0 0112 15c2.636 0 5.07.76 7.121 2.058M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <!-- Contenedor conjunto de botones en mobile -->
+    <div class="flex justify-end items-center space-x-4 lg:hidden">
+      <!-- Botón del menú mobile -->
+      <button (click)="toggleNavbar()" class="text-white text-xl px-3 py-1">
+        <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" width="32" height="24" fill="none"
+          viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M18 6H6m12 4H6m12 4H6m12 4H6" />
+        </svg>
+      </button>
+
+      <!-- Botón de cuenta -->
+      <button
+        class="w-10 h-10 rounded-full bg-white text-gray-700 hover:bg-gray-500 flex items-center justify-center shadow"
+        [routerLink]="['/auth/signin']" title="Mi cuenta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M5.121 17.804A13.938 13.938 0 0112 15c2.636 0 5.07.76 7.121 2.058M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Botones de ingresar a la derecha -->
+
+
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="navbarOpen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center text-white">
+    <ul class="flex flex-col w-full h-full text-center items-center justify-center list-none p-4">
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('home')" (click)="closeNavbar()">
+          {{'Inicio' | translate}}
+        </a>
+      </li>
+      <br>
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('features')" (click)="closeNavbar()">
+          {{'Características' | translate}}
+        </a>
+      </li>
+      <br>
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('services')" (click)="closeNavbar()">
+          {{'Servicios' | translate}}
+        </a>
+      </li>
+      <br>
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('planes')" (click)="closeNavbar()">
+          {{'Planes' | translate}}
+        </a>
+      </li>
+      <br>
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('about')" (click)="closeNavbar()">
+          {{'Nosotros' | translate}}
+        </a>
+      </li>
+      <br>
+      <li>
+        <a class="text-white hover:text-orange-500 py-2 text-sm uppercase font-semibold"
+          (click)="scrollToSection('contact')" (click)="closeNavbar()">
+          {{'Contacto' | translate}}
+        </a>
+      </li>
+      <br>
+      <div>
+        <div class="dropdown">
+          <div hlMenu>
+            <button type="button" hlMenuButton
+              class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 text-white hover:border-primary hover:text-white dark:bg-black">
+              <div>
+                <img [src]="'/assets/images/flags/'+ store.locale.toUpperCase() + '.svg'" alt="image"
+                  class="h-5 w-5 rounded-full object-cover" />
+              </div>
+              <div class="text-base font-bold uppercase">{{ store.locale }}</div>
+              <span class="shrink-0">
+                <icon-caret-down />
+              </span>
+            </button>
+            <ul *hlMenuItems @toggleAnimation
+              class="top-11 grid w-[280px] grid-cols-2 gap-2 !px-2 font-semibold text-dark ltr:-right-14 rtl:-left-14 dark:text-white-dark dark:text-white-light/90 sm:ltr:-right-2 sm:rtl:-left-2">
+              <li *ngFor="let item of store.languageList;">
+                <button *hlMenuItem="let menuItem" type="button" class="w-full hover:text-primary"
+                  [ngClass]="{ 'bg-primary/10 text-primary': translate.currentLang === item.code }"
+                  (click)="changeLanguage(item)">
+                  <img class="h-5 w-5 rounded-full object-cover"
+                    [src]="'/assets/images/flags/'+ item.code.toUpperCase() + '.svg'" alt="" />
+                  <span class="ltr:ml-3 rtl:mr-3">{{ item.name }}</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,14 @@
+# Angular y Node (OBLIGATORIO)
+node_modules/
+.angular/
+dist/
+frontend/.angular/
+
+# Python (OBLIGATORIO)
+venv/
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db
